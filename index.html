@@ -17,87 +17,302 @@
     
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --secondary-color: #6c757d;
-            --success-color: #198754;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --info-color: #0dcaf0;
+            --primary-color: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --info-color: #06b6d4;
+            --background: #f8fafc;
+            --background-secondary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-card: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        }
+
+        * {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animations globales */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200px 0;
+            }
+            100% {
+                background-position: calc(200px + 100%) 0;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Navigation moderne */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-lg);
         }
 
         .navbar-brand {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
+        /* Cards modernes avec glassmorphism */
         .card {
             border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-xl);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
         }
 
         .card:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            border-color: rgba(102, 102, 255, 0.3);
         }
 
         .card-header {
-            border-radius: 12px 12px 0 0 !important;
+            border-radius: 20px 20px 0 0 !important;
             border-bottom: none;
-            font-weight: 600;
+            font-weight: 700;
+            background: var(--gradient-primary) !important;
+            color: white !important;
+            position: relative;
+            overflow: hidden;
         }
 
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        /* Boutons modernes */
         .btn {
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 12px 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
         }
 
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            box-shadow: var(--shadow-md);
         }
 
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+            background: linear-gradient(135deg, #5855f7 0%, #6b5de8 100%);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Inputs modernes */
         .form-control, .form-select {
-            border-radius: 8px;
-            border: 2px solid #e9ecef;
-            padding: 12px 16px;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            padding: 16px 20px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .form-control:focus, .form-select:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
         }
 
+        .form-control::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        /* Progress bars modernes */
         .progress {
-            height: 20px;
-            border-radius: 8px;
+            height: 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            position: relative;
         }
 
         .progress-bar {
-            border-radius: 8px;
-        }
-
-        .badge {
-            border-radius: 6px;
-            font-weight: 500;
-            padding: 6px 12px;
-        }
-
-        .table {
-            border-radius: 8px;
+            border-radius: 20px;
+            background: linear-gradient(90deg, var(--success-color), var(--info-color));
+            position: relative;
             overflow: hidden;
         }
 
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        /* Badges modernes */
+        .badge {
+            border-radius: 20px;
+            font-weight: 600;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(10px);
+        }
+
+        .badge.bg-success {
+            background: linear-gradient(135deg, var(--success-color), #059669) !important;
+        }
+
+        .badge.bg-warning {
+            background: linear-gradient(135deg, var(--warning-color), #d97706) !important;
+        }
+
+        .badge.bg-danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626) !important;
+        }
+
+        /* Tables modernes */
+        .table {
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+        }
+
+        .table thead th {
+            background: var(--gradient-primary);
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            border: none;
+            padding: 20px 16px;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
         .table tbody tr:hover {
-            background-color: rgba(13, 110, 253, 0.05);
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .table tbody td {
+            border-color: rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            vertical-align: middle;
         }
 
         .stats-card h4 {
@@ -143,60 +358,322 @@
             border-radius: 8px;
         }
 
+        /* Container principal avec effet de fond */
+        .main-container {
+            background: var(--background);
+            min-height: 100vh;
+            position: relative;
+            border-radius: 40px 40px 0 0;
+            margin-top: 20px;
+            padding-top: 40px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Hero section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 60px 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .display-4 {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        /* Stats cards */
+        .stats-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stats-card h4 {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        /* Alerts modernes */
+        .alert {
+            border: none;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+            color: var(--success-color);
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05));
+            color: var(--primary-color);
+        }
+
+        /* Toast modernes */
+        .toast {
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Modal moderne */
+        .modal-content {
+            border: none;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px 24px 0 0;
+        }
+
+        /* Responsive moderne */
         @media (max-width: 768px) {
             .navbar-brand {
                 font-size: 1.2rem;
             }
             
             .card {
-                margin-bottom: 1rem;
+                margin-bottom: 1.5rem;
+                border-radius: 16px;
             }
+
+            .hero-section {
+                padding: 40px 20px;
+                border-radius: 20px;
+            }
+
+            .btn {
+                padding: 14px 28px;
+                font-size: 0.9rem;
+            }
+
+            .main-container {
+                border-radius: 20px 20px 0 0;
+                margin-top: 10px;
+            }
+        }
+
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5855f7 0%, #6b5de8 100%);
+        }
+
+        /* Effet ripple pour les boutons */
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: translateZ(0);
+                opacity: 0;
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        /* Loading spinner moderne */
+        .spinner-modern {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(99, 102, 241, 0.1);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast moderne avec glassmorphism */
+        .toast {
+            backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            border-radius: 16px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .toast-header {
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.125);
+        }
+
+        /* Effet de flou sur le fond lors des modales */
+        .modal-backdrop {
+            backdrop-filter: blur(10px);
+        }
+
+        /* Animation pour les éléments qui apparaissent */
+        .fade-in-scale {
+            animation: fadeInScale 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Canvas pour graphiques */
+        canvas {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* Indicateur de chargement moderne */
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            90%, 100% { content: ''; }
         }
     </style>
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <!-- Navigation moderne -->
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand animate-fade-in" href="#">
                 <i class="fas fa-search me-2"></i>SEO Audit Tool
             </a>
             
             <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="#" onclick="showSection('home')">
+                <a class="nav-link text-dark fw-bold" href="#" onclick="showSection('home')">
                     <i class="fas fa-home me-1"></i>Accueil
                 </a>
-                <a class="nav-link" href="#" onclick="showSection('history')">
+                <a class="nav-link text-dark fw-bold" href="#" onclick="showSection('history')">
                     <i class="fas fa-history me-1"></i>Historique
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container mt-4">
-        <!-- Section Accueil -->
-        <div id="home" class="section active">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="text-center mb-5">
-                        <h1 class="display-4 text-primary mb-3">
-                            <i class="fas fa-search me-3"></i>SEO Audit Tool
-                        </h1>
-                        <p class="lead text-muted">
-                            Analysez et optimisez les performances SEO de votre site web en temps réel
-                        </p>
-                    </div>
-
-                    <div class="card shadow-lg">
-                        <div class="card-header bg-primary text-white">
-                            <h4 class="mb-0">
-                                <i class="fas fa-globe me-2"></i>Nouvelle analyse SEO
-                            </h4>
+    <!-- Main Content avec design moderne -->
+    <div class="main-container">
+        <div class="container">
+            <!-- Section Accueil -->
+            <div id="home" class="section active animate-fade-in">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">
+                        <!-- Hero Section -->
+                        <div class="hero-section text-center mb-5">
+                            <h1 class="display-4 mb-3">
+                                <i class="fas fa-search me-3 animate-pulse"></i>SEO Audit Tool
+                            </h1>
+                            <p class="lead text-muted mb-4">
+                                Analysez et optimisez les performances SEO de votre site web avec notre outil intelligent
+                            </p>
+                            <div class="row g-4 mt-4">
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <i class="fas fa-rocket text-primary fs-2 mb-3"></i>
+                                        <h4>Rapide</h4>
+                                        <p class="text-muted mb-0">Analyse en temps réel</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <i class="fas fa-chart-line text-success fs-2 mb-3"></i>
+                                        <h4>Complet</h4>
+                                        <p class="text-muted mb-0">30+ critères analysés</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stats-card">
+                                        <i class="fas fa-file-pdf text-danger fs-2 mb-3"></i>
+                                        <h4>Export PDF</h4>
+                                        <p class="text-muted mb-0">Rapports professionnels</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        
-                        <div class="card-body">
+
+                        <div class="card shadow-lg animate-fade-in">
+                            <div class="card-header">
+                                <h4 class="mb-0">
+                                    <i class="fas fa-globe me-2"></i>Nouvelle analyse SEO
+                                </h4>
+                            </div>
+                            
+                            <div class="card-body p-4">
                             <form id="analysisForm" onsubmit="startAnalysis(event)">
                                 <div class="row g-3">
                                     <div class="col-md-8">
@@ -222,20 +699,12 @@
                                         </select>
                                     </div>
                                 </div>
-                                
-                                <div class="alert alert-success mt-3" role="alert">
-                                    <i class="fas fa-server me-2"></i>
-                                    <strong>Proxy local:</strong> Cette application utilise un serveur proxy local pour un scraping fiable et rapide.
-                                    <br><small class="mt-1 d-block text-muted">
-                                        <strong>1.</strong> Lancez d'abord: <code>node proxy-server.js</code><br>
-                                        <strong>2.</strong> Puis ouvrez: <code>http://localhost:3001/</code>
-                                    </small>
-                                </div>
 
-                                <div class="row mt-4">
-                                    <div class="col-12">
-                                        <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
-                                            <i class="fas fa-play me-2"></i>Démarrer l'analyse SEO
+                                <div class="row mt-5">
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-primary btn-lg px-5 py-3" id="submitBtn">
+                                            <i class="fas fa-rocket me-3"></i>Démarrer l'analyse SEO
+                                            <i class="fas fa-arrow-right ms-2"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -246,18 +715,18 @@
             </div>
         </div>
 
-        <!-- Section Progression -->
-        <div id="progress" class="section">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="text-center mb-4">
-                        <h2 class="text-primary">
-                            <i class="fas fa-cog fa-spin me-2"></i>Analyse SEO en cours
-                        </h2>
-                        <p class="text-muted">Analyse de votre site web...</p>
-                    </div>
+            <!-- Section Progression -->
+            <div id="progress" class="section animate-fade-in">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="hero-section text-center mb-4">
+                            <h2 class="display-6">
+                                <i class="fas fa-cog fa-spin me-3 text-primary"></i>Analyse SEO en cours
+                            </h2>
+                            <p class="lead text-muted">Intelligence artificielle au travail...</p>
+                        </div>
 
-                    <div class="card shadow">
+                        <div class="card shadow-lg">
                         <div class="card-body">
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -333,75 +802,72 @@
             </div>
         </div>
 
-        <!-- Section Résultats -->
-        <div id="results" class="section">
-            <div class="row">
-                <div class="col-12">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                            <h2 class="text-primary mb-1">
-                                <i class="fas fa-chart-bar me-2"></i>Résultats de l'analyse SEO
-                            </h2>
-                            <p class="text-muted mb-0" id="analysisInfo">
-                                <i class="fas fa-globe me-1"></i><span id="analyzedDomain">-</span> - 
-                                <i class="fas fa-calendar me-1"></i><span id="analysisDate">-</span>
-                            </p>
-                        </div>
-                        <div>
-                            <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-outline-primary" onclick="exportResults('json')">
-                                    <i class="fas fa-download me-2"></i>JSON
-                                </button>
-                                <button type="button" class="btn btn-outline-primary" onclick="exportResults('csv')">
-                                    <i class="fas fa-table me-2"></i>CSV
-                                </button>
-                                <button type="button" class="btn btn-outline-danger" onclick="exportResults('pdf')">
-                                    <i class="fas fa-file-pdf me-2"></i>PDF
-                                </button>
-                                <button type="button" class="btn btn-primary" onclick="showSection('home')">
-                                    <i class="fas fa-plus me-2"></i>Nouvelle analyse
-                                </button>
+            <!-- Section Résultats -->
+            <div id="results" class="section animate-fade-in">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- En-tête résultats moderne -->
+                        <div class="hero-section mb-4">
+                            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center">
+                                <div class="text-center text-lg-start mb-3 mb-lg-0">
+                                    <h2 class="display-6 mb-2">
+                                        <i class="fas fa-chart-bar me-3"></i>Résultats de l'analyse SEO
+                                    </h2>
+                                    <p class="lead text-muted mb-0" id="analysisInfo">
+                                        <i class="fas fa-globe me-2"></i><span id="analyzedDomain">-</span>
+                                        <i class="fas fa-calendar me-3 ms-3"></i><span id="analysisDate">-</span>
+                                    </p>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button type="button" class="btn btn-outline-primary" onclick="exportResults('json')">
+                                        <i class="fas fa-download me-2"></i>JSON
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary" onclick="exportResults('csv')">
+                                        <i class="fas fa-table me-2"></i>CSV
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger" onclick="exportResults('pdf')">
+                                        <i class="fas fa-file-pdf me-2"></i>PDF
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="showSection('home')">
+                                        <i class="fas fa-plus me-2"></i>Nouvelle analyse
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Résumé -->
-            <div class="row mb-4">
-                <div class="col-md-3">
-                    <div class="card text-center border-primary">
-                        <div class="card-body">
-                            <h3 class="text-primary" id="summaryTotalPages">0</h3>
-                            <p class="mb-0">Pages analysées</p>
+                <!-- Cards de résumé modernes -->
+                <div class="row g-4 mb-5">
+                    <div class="col-md-3">
+                        <div class="stats-card border-0">
+                            <i class="fas fa-globe text-primary fs-1 mb-3"></i>
+                            <h3 id="summaryTotalPages">0</h3>
+                            <p class="mb-0 text-muted">Pages analysées</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card border-0">
+                            <i class="fas fa-check-circle text-success fs-1 mb-3"></i>
+                            <h3 id="summaryPagesOk">0</h3>
+                            <p class="mb-0 text-muted">Pages parfaites</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card border-0">
+                            <i class="fas fa-exclamation-triangle text-warning fs-1 mb-3"></i>
+                            <h3 id="summaryPagesWithIssues">0</h3>
+                            <p class="mb-0 text-muted">Pages à améliorer</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card border-0">
+                            <i class="fas fa-stopwatch text-info fs-1 mb-3"></i>
+                            <h3 id="summaryAvgResponseTime">0</h3>
+                            <p class="mb-0 text-muted">Temps moyen (ms)</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-center border-success">
-                        <div class="card-body">
-                            <h3 class="text-success" id="summaryPagesOk">0</h3>
-                            <p class="mb-0">Pages sans problème</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-center border-warning">
-                        <div class="card-body">
-                            <h3 class="text-warning" id="summaryPagesWithIssues">0</h3>
-                            <p class="mb-0">Pages avec problèmes</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card text-center border-info">
-                        <div class="card-body">
-                            <h3 class="text-info" id="summaryAvgResponseTime">0</h3>
-                            <p class="mb-0">Temps moyen (ms)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Graphiques -->
             <div class="row mb-4">
@@ -410,8 +876,8 @@
                         <div class="card-header">
                             <h5><i class="fas fa-chart-pie me-2"></i>Répartition des problèmes</h5>
                         </div>
-                        <div class="card-body">
-                            <canvas id="issuesChart"></canvas>
+                        <div class="card-body" style="height: 400px; min-height: 400px;">
+                            <canvas id="issuesChart" width="400" height="400" style="width: 100% !important; height: 100% !important;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -420,8 +886,8 @@
                         <div class="card-header">
                             <h5><i class="fas fa-chart-bar me-2"></i>Codes de statut</h5>
                         </div>
-                        <div class="card-body">
-                            <canvas id="statusChart"></canvas>
+                        <div class="card-body" style="height: 400px; min-height: 400px;">
+                            <canvas id="statusChart" width="400" height="400" style="width: 100% !important; height: 100% !important;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -453,25 +919,33 @@
             </div>
         </div>
 
-        <!-- Section Historique -->
-        <div id="history" class="section">
-            <div class="row">
-                <div class="col-12">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h2 class="text-primary">
-                            <i class="fas fa-history me-2"></i>Historique des analyses
-                        </h2>
-                        <button class="btn btn-outline-danger" onclick="clearHistory()">
-                            <i class="fas fa-trash me-2"></i>Vider l'historique
-                        </button>
-                    </div>
+            <!-- Section Historique -->
+            <div id="history" class="section animate-fade-in">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- En-tête historique -->
+                        <div class="hero-section mb-4">
+                            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center">
+                                <div class="text-center text-lg-start mb-3 mb-lg-0">
+                                    <h2 class="display-6">
+                                        <i class="fas fa-history me-3"></i>Historique des analyses
+                                    </h2>
+                                    <p class="lead text-muted mb-0">Toutes vos analyses précédentes</p>
+                                </div>
+                                <button class="btn btn-outline-danger" onclick="clearHistory()">
+                                    <i class="fas fa-trash me-2"></i>Vider l'historique
+                                </button>
+                            </div>
+                        </div>
 
-                    <div id="historyContent">
-                        <!-- Contenu généré dynamiquement -->
+                        <div id="historyContent">
+                            <!-- Contenu généré dynamiquement -->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Toast Container -->
@@ -1274,6 +1748,10 @@
             showSection('results');
 
             const { metadata, summary, pages } = currentResults;
+            
+            console.log('showResults - summary:', summary);
+            console.log('showResults - topIssues:', summary.topIssues);
+            console.log('showResults - statusCodes:', summary.statusCodes);
 
             // Mettre à jour les informations générales
             document.getElementById('analyzedDomain').textContent = metadata.domain;
@@ -1294,7 +1772,15 @@
         }
 
         function createIssuesChart(topIssues) {
-            const ctx = document.getElementById('issuesChart').getContext('2d');
+            console.log('createIssuesChart appelée avec:', topIssues);
+            const canvas = document.getElementById('issuesChart');
+            if (!canvas) {
+                console.error('Canvas issuesChart non trouvé!');
+                return;
+            }
+            
+            console.log('Canvas dimensions:', canvas.width, 'x', canvas.height);
+            const ctx = canvas.getContext('2d');
             
             // Nettoyer le graphique existant
             if (window.issuesChartInstance) {
@@ -1304,8 +1790,19 @@
             const sortedIssues = Object.entries(topIssues)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 8); // Top 8 des problèmes
+            
+            console.log('Données issues triées:', sortedIssues);
 
-            window.issuesChartInstance = new Chart(ctx, {
+            if (sortedIssues.length === 0) {
+                console.log('Aucun problème trouvé, graphique vide');
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Aucun problème détecté', canvas.width/2, canvas.height/2);
+                return;
+            }
+
+            try {
+                window.issuesChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: sortedIssues.map(([issue]) => issue.length > 30 ? issue.substring(0, 30) + '...' : issue),
@@ -1319,6 +1816,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'bottom',
@@ -1326,10 +1824,30 @@
                     }
                 }
             });
+            console.log('Graphique issues créé avec succès!');
+            
+            // Forcer le redimensionnement
+            setTimeout(() => {
+                if (window.issuesChartInstance) {
+                    window.issuesChartInstance.resize();
+                }
+            }, 100);
+            
+            } catch (error) {
+                console.error('Erreur lors de la création du graphique issues:', error);
+            }
         }
 
         function createStatusChart(statusCodes) {
-            const ctx = document.getElementById('statusChart').getContext('2d');
+            console.log('createStatusChart appelée avec:', statusCodes);
+            const canvas = document.getElementById('statusChart');
+            if (!canvas) {
+                console.error('Canvas statusChart non trouvé!');
+                return;
+            }
+            
+            console.log('Canvas status dimensions:', canvas.width, 'x', canvas.height);
+            const ctx = canvas.getContext('2d');
             
             // Nettoyer le graphique existant
             if (window.statusChartInstance) {
@@ -1338,8 +1856,19 @@
 
             const statusLabels = Object.keys(statusCodes);
             const statusCounts = Object.values(statusCodes);
+            
+            console.log('Données statuts:', statusLabels, statusCounts);
 
-            window.statusChartInstance = new Chart(ctx, {
+            if (statusLabels.length === 0) {
+                console.log('Aucun code de statut, graphique vide');
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Aucune donnée de statut', canvas.width/2, canvas.height/2);
+                return;
+            }
+
+            try {
+                window.statusChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: statusLabels,
@@ -1357,6 +1886,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true
@@ -1364,6 +1894,18 @@
                     }
                 }
             });
+            console.log('Graphique statuts créé avec succès!');
+            
+            // Forcer le redimensionnement
+            setTimeout(() => {
+                if (window.statusChartInstance) {
+                    window.statusChartInstance.resize();
+                }
+            }, 100);
+            
+            } catch (error) {
+                console.error('Erreur lors de la création du graphique statuts:', error);
+            }
         }
 
         function fillPagesTable(pages) {
@@ -2885,8 +3427,115 @@
             toast.show();
         }
 
+        // Micro-interactions et animations
+        function addMicroInteractions() {
+            // Animation au hover des cartes - effet subtil
+            document.querySelectorAll('.card, .stats-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Animation des boutons
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    // Effet ripple
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple-effect');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // Animation des sections lors du changement
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.section').forEach(section => {
+                observer.observe(section);
+            });
+        }
+        
+        // Animation du score en temps réel
+        function animateNumber(element, targetValue, duration = 1000) {
+            const startValue = 0;
+            const increment = targetValue / (duration / 16);
+            let currentValue = startValue;
+            
+            const updateValue = () => {
+                currentValue += increment;
+                if (currentValue >= targetValue) {
+                    element.textContent = targetValue;
+                } else {
+                    element.textContent = Math.floor(currentValue);
+                    requestAnimationFrame(updateValue);
+                }
+            };
+            
+            updateValue();
+        }
+        
+        // Animation fluide entre sections
+        function showSection(sectionName) {
+            // Ajouter classe de sortie aux sections visibles
+            document.querySelectorAll('.section.active').forEach(section => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateX(-50px)';
+                
+                setTimeout(() => {
+                    section.classList.remove('active');
+                    section.style.opacity = '';
+                    section.style.transform = '';
+                }, 300);
+            });
+            
+            // Afficher la nouvelle section avec animation
+            setTimeout(() => {
+                const targetSection = document.getElementById(sectionName);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                    targetSection.style.opacity = '0';
+                    targetSection.style.transform = 'translateX(50px)';
+                    
+                    setTimeout(() => {
+                        targetSection.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                        targetSection.style.opacity = '1';
+                        targetSection.style.transform = 'translateX(0)';
+                    }, 50);
+                }
+                
+                // Charger l'historique si nécessaire
+                if (sectionName === 'history') {
+                    loadHistory();
+                }
+            }, 350);
+        }
+        
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser les micro-interactions
+            addMicroInteractions();
             // Validation de l'URL en temps réel
             document.getElementById('domain').addEventListener('input', function(e) {
                 const url = e.target.value;
@@ -2904,8 +3553,19 @@
             // Vérifier s'il y a une analyse récente dans l'historique
             const history = JSON.parse(localStorage.getItem('seo_analysis_history') || '[]');
             if (history.length > 0) {
-                showToast('Analyse précédente disponible dans l\'historique', 'info');
+                setTimeout(() => {
+                    showToast('Analyse précédente disponible dans l\'historique', 'info');
+                }, 1000);
             }
+            
+            // Animation d'entrée pour la page d'accueil
+            setTimeout(() => {
+                document.querySelectorAll('.stats-card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                    }, index * 200);
+                });
+            }, 500);
         });
     </script>
 </body>
