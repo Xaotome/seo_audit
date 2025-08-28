@@ -1,0 +1,2913 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Audit Tool - Interface Web</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #0dcaf0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            border-radius: 12px 12px 0 0 !important;
+            border-bottom: none;
+            font-weight: 600;
+        }
+
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+        }
+
+        .progress {
+            height: 20px;
+            border-radius: 8px;
+        }
+
+        .progress-bar {
+            border-radius: 8px;
+        }
+
+        .badge {
+            border-radius: 6px;
+            font-weight: 500;
+            padding: 6px 12px;
+        }
+
+        .table {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+
+        .stats-card h4 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast {
+            margin-bottom: 10px;
+        }
+
+        .url-truncate {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+        }
+
+        #progressSection .card-body {
+            padding: 30px;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .progress-stat {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .progress-stat h5 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        .current-url {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            word-break: break-all;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="showSection('home')">
+                <i class="fas fa-search me-2"></i>SEO Audit Tool
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#" onclick="showSection('home')">
+                    <i class="fas fa-home me-1"></i>Accueil
+                </a>
+                <a class="nav-link" href="#" onclick="showSection('history')">
+                    <i class="fas fa-history me-1"></i>Historique
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <!-- Section Accueil -->
+        <div id="homeSection">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- En-tête -->
+                    <div class="text-center mb-5">
+                        <h1 class="display-4 text-primary">
+                            <i class="fas fa-search me-3"></i>SEO Audit Tool
+                        </h1>
+                        <p class="lead text-muted">
+                            Analysez et optimisez les performances SEO de votre site web
+                        </p>
+                    </div>
+
+                    <!-- Formulaire principal -->
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">
+                                <i class="fas fa-globe me-2"></i>Nouvelle analyse SEO
+                            </h4>
+                        </div>
+                        
+                        <div class="card-body">
+                            <form id="analysisForm" onsubmit="startAnalysis(event)">
+                                <!-- URL du site -->
+                                <div class="mb-4">
+                                    <label for="domain" class="form-label">
+                                        <i class="fas fa-link me-1"></i>URL du site à analyser
+                                    </label>
+                                    <input type="url" 
+                                           class="form-control form-control-lg" 
+                                           id="domain" 
+                                           name="domain" 
+                                           placeholder="https://example.com"
+                                           required>
+                                    <div class="form-text">
+                                        Saisissez l'URL complète de votre site (avec http:// ou https://)
+                                    </div>
+                                </div>
+
+                                <!-- Options avancées -->
+                                <div class="accordion mb-4" id="advancedOptions">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" 
+                                                    data-bs-toggle="collapse" data-bs-target="#collapseAdvanced">
+                                                <i class="fas fa-cog me-2"></i>Options avancées
+                                            </button>
+                                        </h2>
+                                        <div id="collapseAdvanced" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="maxPages" class="form-label">
+                                                            <i class="fas fa-file-alt me-1"></i>Nombre de pages maximum
+                                                        </label>
+                                                        <input type="number" class="form-control" id="maxPages" value="20" min="1" max="100">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="rateLimit" class="form-label">
+                                                            <i class="fas fa-tachometer-alt me-1"></i>Vitesse (req/s)
+                                                        </label>
+                                                        <input type="number" class="form-control" id="rateLimit" value="1.0" min="0.1" max="5.0" step="0.1">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="followRedirects" checked>
+                                                            <label class="form-check-label" for="followRedirects">
+                                                                <i class="fas fa-share me-1"></i>Suivre les redirections
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="includeImages" checked>
+                                                            <label class="form-check-label" for="includeImages">
+                                                                <i class="fas fa-image me-1"></i>Analyser les images
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="homepageOnly">
+                                                            <label class="form-check-label" for="homepageOnly">
+                                                                <i class="fas fa-home me-1"></i>Page d'accueil uniquement
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bouton de soumission -->
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                        <i class="fas fa-play me-2"></i>Démarrer l'analyse
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Informations importantes -->
+                    <div class="alert alert-success mt-4 mb-4" id="serverModeAlert" style="display:none;">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-server me-2 mt-1"></i>
+                            <div>
+                                <strong>Mode serveur actif :</strong> Vous pouvez lancer des analyses directement depuis cette interface ! 
+                                Le serveur Python est détecté et les analyses se feront automatiquement en arrière-plan.
+                                <div class="mt-2">
+                                    <small class="text-success">✅ Serveur Python détecté sur ce port</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-4 mb-4" id="staticModeAlert">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-info-circle me-2 mt-1"></i>
+                            <div>
+                                <strong>Mode statique :</strong> Cette interface affiche les résultats des analyses SEO effectuées par l'outil Python. 
+                                <div class="mt-2">
+                                    <strong>Option 1 - Serveur intégré :</strong>
+                                    <div class="bg-dark text-light p-2 rounded mt-1 mb-2">
+                                        <code>python3 simple_server.py</code>
+                                    </div>
+                                    <small>Puis rechargez cette page pour lancer des analyses directement ici !</small>
+                                </div>
+                                <div class="mt-2">
+                                    <strong>Option 2 - Commande manuelle :</strong>
+                                    <div class="bg-dark text-light p-2 rounded mt-1">
+                                        <code>python3 run_audit.py https://votre-site.com --web-output</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations sur l'outil -->
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-globe fa-3x text-primary mb-3"></i>
+                                    <h5>Analyse directe</h5>
+                                    <p class="text-muted">
+                                        Analyse réelle des sites web via proxy CORS
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-search-plus fa-3x text-success mb-3"></i>
+                                    <h5>SEO complet</h5>
+                                    <p class="text-muted">
+                                        Analyse des titres, meta, H1, images, contenu et plus
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-download fa-3x text-info mb-3"></i>
+                                    <h5>Export données</h5>
+                                    <p class="text-muted">
+                                        Téléchargement des résultats réels en JSON/CSV
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Progression -->
+        <div id="progressSection" class="hidden">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="text-center mb-4">
+                        <h2 class="text-primary">
+                            <i class="fas fa-cog fa-spin me-2"></i>Analyse SEO en cours
+                        </h2>
+                        <p class="text-muted">Simulation de l'analyse de votre site...</p>
+                    </div>
+
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">
+                                <i class="fas fa-chart-line me-2"></i>Progression de l'analyse
+                            </h4>
+                        </div>
+                        
+                        <div class="card-body">
+                            <!-- Barre de progression -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span><strong>Progression globale</strong></span>
+                                    <span id="progressPercent">0%</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                         id="progressBar" 
+                                         style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Statistiques -->
+                            <div class="progress-stats">
+                                <div class="progress-stat">
+                                    <h5 id="pagesAnalyzed">0</h5>
+                                    <small class="text-muted">Pages analysées</small>
+                                </div>
+                                <div class="progress-stat">
+                                    <h5 id="totalPages">?</h5>
+                                    <small class="text-muted">Pages total</small>
+                                </div>
+                                <div class="progress-stat">
+                                    <h5 id="timeElapsed">0s</h5>
+                                    <small class="text-muted">Temps écoulé</small>
+                                </div>
+                                <div class="progress-stat">
+                                    <h5 id="timeRemaining">?</h5>
+                                    <small class="text-muted">Temps restant</small>
+                                </div>
+                            </div>
+
+                            <!-- Page actuelle -->
+                            <div>
+                                <h6><i class="fas fa-globe me-2"></i>Page en cours d'analyse :</h6>
+                                <div class="current-url" id="currentUrl">Initialisation...</div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="text-center mt-4">
+                                <button class="btn btn-outline-danger me-2" onclick="stopAnalysis()">
+                                    <i class="fas fa-stop me-2"></i>Arrêter l'analyse
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="showSection('history')">
+                                    <i class="fas fa-history me-2"></i>Voir l'historique
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Résultats -->
+        <div id="resultsSection" class="hidden">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Alerte d'information -->
+                    <div class="alert alert-success mb-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <div>
+                                <strong>Analyse réelle terminée :</strong> Les résultats ci-dessous correspondent à l'analyse effective de votre site web.
+                                Les données incluent les métriques SEO réelles, les temps de réponse mesurés et les problèmes détectés.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- En-tête -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="text-primary">
+                                <i class="fas fa-chart-bar me-2"></i>Résultats de l'analyse SEO
+                            </h2>
+                            <p class="text-muted mb-0" id="analysisInfo">
+                                <i class="fas fa-globe me-1"></i><span id="analyzedDomain">-</span> - 
+                                <i class="fas fa-calendar me-1"></i><span id="analysisDate">-</span>
+                            </p>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-primary me-2" onclick="downloadResults('json')">
+                                <i class="fas fa-download me-1"></i>JSON
+                            </button>
+                            <button class="btn btn-outline-success me-2" onclick="downloadResults('csv')">
+                                <i class="fas fa-download me-1"></i>CSV
+                            </button>
+                            <div class="btn-group me-2" role="group">
+                                <button class="btn btn-outline-danger" onclick="exportClientPDF()" id="exportClientPdfBtn">
+                                    <i class="fas fa-file-pdf me-1"></i>PDF
+                                </button>
+                                <button type="button" class="btn btn-outline-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="visually-hidden">Options PDF</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="exportClientPDF()">
+                                        <i class="fas fa-browser me-2"></i>PDF côté client (rapide)
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="exportServerPDF()" id="serverPdfOption">
+                                        <i class="fas fa-server me-2"></i>PDF côté serveur (complet)
+                                    </a></li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-primary" onclick="showSection('home')">
+                                <i class="fas fa-plus me-1"></i>Nouvelle analyse
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Résumé exécutif -->
+                    <div class="row mb-4" id="summaryCards">
+                        <!-- Cartes générées dynamiquement -->
+                    </div>
+
+                    <!-- Top problèmes -->
+                    <div class="card mb-4" id="topIssuesCard">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">
+                                <i class="fas fa-exclamation-circle me-2"></i>Top 5 des problèmes détectés
+                            </h5>
+                        </div>
+                        <div class="card-body" id="topIssuesContent">
+                            <!-- Contenu généré dynamiquement -->
+                        </div>
+                    </div>
+
+                    <!-- Graphiques -->
+                    <div class="row mb-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-chart-pie me-2"></i>Répartition des problèmes
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="issuesChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-chart-bar me-2"></i>Longueur des titres
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="titleLengthChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tableau des résultats -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-table me-2"></i>Détail par page
+                                </h5>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="toggleFilters()">
+                                    <i class="fas fa-filter me-1"></i>Filtres
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Filtres -->
+                        <div id="filtersPanel" class="card-body border-bottom bg-light hidden">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Statut HTTP</label>
+                                    <select class="form-select form-select-sm" id="statusFilter" onchange="applyFilters()">
+                                        <option value="">Tous</option>
+                                        <option value="200">200 - OK</option>
+                                        <option value="404">404 - Not Found</option>
+                                        <option value="500">500 - Server Error</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Problèmes</label>
+                                    <select class="form-select form-select-sm" id="issuesFilter" onchange="applyFilters()">
+                                        <option value="">Tous</option>
+                                        <option value="with-issues">Avec problèmes</option>
+                                        <option value="no-issues">Sans problèmes</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Recherche</label>
+                                    <input type="text" class="form-control form-control-sm" id="searchFilter" 
+                                           placeholder="URL, titre..." oninput="applyFilters()">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0" id="resultsTable">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>URL</th>
+                                            <th>Statut</th>
+                                            <th>Temps</th>
+                                            <th>Titre</th>
+                                            <th>Meta Desc</th>
+                                            <th>H1</th>
+                                            <th>Mots</th>
+                                            <th>Problèmes</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultsTableBody">
+                                        <!-- Contenu généré dynamiquement -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Historique -->
+        <div id="historySection" class="hidden">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="text-primary">
+                            <i class="fas fa-history me-2"></i>Historique des analyses
+                        </h2>
+                        <button class="btn btn-primary" onclick="showSection('home')">
+                            <i class="fas fa-plus me-2"></i>Nouvelle analyse
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-check-circle me-2"></i>Analyses précédentes
+                            </h5>
+                        </div>
+                        <div class="card-body" id="historyContent">
+                            <!-- Contenu généré dynamiquement -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        // Variables globales
+        let currentAnalysis = null;
+        let analysisHistory = [];
+        let progressInterval = null;
+        let currentResults = null;
+        let useRealPythonData = true; // Flag pour utiliser les données Python
+        let currentAnalysisId = null;
+        let isServerMode = false; // Détecté automatiquement
+
+        // Analyseur SEO réel côté client
+        class RealSEOAnalyzer {
+            constructor() {
+                this.corsProxy = 'https://api.allorigins.win/raw?url=';
+                this.results = [];
+            }
+
+            // Découvrir les URLs d'un site de façon exhaustive
+            async discoverUrls(domain, maxPages, homepageOnly) {
+                const discoveredUrls = new Set();
+                const toAnalyze = new Set();
+                const homepage = domain + (domain.endsWith('/') ? '' : '/');
+                
+                discoveredUrls.add(homepage);
+                
+                if (homepageOnly) {
+                    return [homepage];
+                }
+
+                // Méthode 1: Sitemap (prioritaire)
+                try {
+                    console.log('🗺️ Recherche du sitemap...');
+                    const sitemapUrls = await this.fetchSitemap(domain);
+                    if (sitemapUrls.length > 0) {
+                        console.log(`📋 Sitemap trouvé avec ${sitemapUrls.length} URLs`);
+                        sitemapUrls.forEach(url => {
+                            if (discoveredUrls.size < maxPages) {
+                                discoveredUrls.add(url);
+                            }
+                        });
+                        
+                        // Si on a assez d'URLs depuis le sitemap, les retourner
+                        if (discoveredUrls.size >= maxPages) {
+                            return Array.from(discoveredUrls).slice(0, maxPages);
+                        }
+                    }
+                } catch (e) {
+                    console.log('⚠️ Sitemap non accessible:', e.message);
+                }
+
+                // Méthode 2: Crawl récursif des liens
+                console.log('🕷️ Démarrage du crawl récursif...');
+                toAnalyze.add(homepage);
+                
+                let depth = 0;
+                const maxDepth = 3; // Profondeur maximum pour éviter les boucles infinies
+                
+                while (toAnalyze.size > 0 && discoveredUrls.size < maxPages && depth < maxDepth) {
+                    console.log(`📊 Niveau ${depth + 1} - Analyse de ${toAnalyze.size} pages`);
+                    
+                    const currentLevel = Array.from(toAnalyze);
+                    toAnalyze.clear();
+                    
+                    // Analyser toutes les pages du niveau actuel en parallèle
+                    const linkPromises = currentLevel.map(async (url) => {
+                        try {
+                            const links = await this.extractLinksFromPage(url, domain);
+                            return links;
+                        } catch (e) {
+                            console.log(`❌ Erreur extraction liens de ${url}:`, e.message);
+                            return [];
+                        }
+                    });
+                    
+                    const allLinksArrays = await Promise.all(linkPromises);
+                    const allLinks = allLinksArrays.flat();
+                    
+                    // Ajouter les nouveaux liens découverts
+                    for (const link of allLinks) {
+                        if (discoveredUrls.size >= maxPages) break;
+                        
+                        if (!discoveredUrls.has(link)) {
+                            discoveredUrls.add(link);
+                            
+                            // Ajouter à la file pour le prochain niveau
+                            if (depth < maxDepth - 1) {
+                                toAnalyze.add(link);
+                            }
+                        }
+                    }
+                    
+                    depth++;
+                    
+                    // Petit délai pour ne pas surcharger
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                }
+
+                // Méthode 3: URLs communes (fallback)
+                if (discoveredUrls.size < 5) {
+                    console.log('🔍 Ajout d\'URLs communes...');
+                    const commonPaths = [
+                        '/about', '/contact', '/services', '/products', '/blog', '/news',
+                        '/team', '/portfolio', '/pricing', '/support', '/help', '/faq',
+                        '/legal', '/privacy', '/terms', '/careers', '/login', '/register'
+                    ];
+                    
+                    for (const path of commonPaths) {
+                        if (discoveredUrls.size >= maxPages) break;
+                        const url = domain + path;
+                        if (!discoveredUrls.has(url)) {
+                            discoveredUrls.add(url);
+                        }
+                    }
+                }
+
+                const finalUrls = Array.from(discoveredUrls).slice(0, maxPages);
+                console.log(`✅ Découverte terminée: ${finalUrls.length} URLs trouvées`);
+                
+                return finalUrls;
+            }
+
+            // Récupérer le sitemap
+            async fetchSitemap(domain) {
+                const sitemapUrls = [
+                    domain + '/sitemap.xml',
+                    domain + '/sitemap_index.xml'
+                ];
+
+                for (const sitemapUrl of sitemapUrls) {
+                    try {
+                        const response = await fetch(this.corsProxy + encodeURIComponent(sitemapUrl));
+                        if (response.ok) {
+                            const xmlText = await response.text();
+                            return this.parseSitemap(xmlText, domain);
+                        }
+                    } catch (e) {
+                        continue;
+                    }
+                }
+                return [];
+            }
+
+            // Parser le sitemap XML
+            parseSitemap(xmlText, domain) {
+                const urls = [];
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                
+                // Chercher les balises <loc>
+                const locElements = xmlDoc.getElementsByTagName('loc');
+                for (const locElement of locElements) {
+                    const url = locElement.textContent.trim();
+                    if (url.startsWith(domain)) {
+                        urls.push(url);
+                    }
+                }
+                
+                return urls;
+            }
+
+            // Extraire les liens d'une page de façon exhaustive
+            async extractLinksFromPage(pageUrl, domain) {
+                try {
+                    const response = await fetch(this.corsProxy + encodeURIComponent(pageUrl), {
+                        headers: {
+                            'User-Agent': 'Mozilla/5.0 (SEO-Audit-Bot) Chrome/91.0'
+                        }
+                    });
+                    
+                    if (!response.ok) return [];
+                    
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    const links = new Set();
+                    const baseUrl = new URL(domain);
+                    
+                    // Extraire les liens de navigation et contenu
+                    const linkSelectors = [
+                        'a[href]',           // Tous les liens
+                        'nav a[href]',       // Navigation
+                        'menu a[href]',      // Menu
+                        '.menu a[href]',     // Menu avec classe
+                        '.nav a[href]',      // Navigation avec classe
+                        '.navbar a[href]',   // Navbar
+                        'header a[href]',    // Header
+                        'footer a[href]',    // Footer
+                        '.sidebar a[href]',  // Sidebar
+                        'main a[href]',      // Contenu principal
+                        '.content a[href]',  // Zone de contenu
+                        '.post a[href]',     // Articles/posts
+                        '.page a[href]'      // Pages
+                    ];
+                    
+                    for (const selector of linkSelectors) {
+                        const elements = doc.querySelectorAll(selector);
+                        
+                        for (const element of elements) {
+                            let href = element.getAttribute('href');
+                            if (!href) continue;
+                            
+                            // Nettoyer et normaliser l'URL
+                            href = href.trim();
+                            
+                            // Ignorer les liens vides, fragments, mailto, tel, etc.
+                            if (!href || 
+                                href === '#' || 
+                                href.startsWith('#') ||
+                                href.startsWith('mailto:') || 
+                                href.startsWith('tel:') ||
+                                href.startsWith('fax:') ||
+                                href.startsWith('javascript:') ||
+                                href.startsWith('data:')) {
+                                continue;
+                            }
+                            
+                            // Convertir les URLs relatives en absolues
+                            try {
+                                let absoluteUrl;
+                                
+                                if (href.startsWith('http')) {
+                                    absoluteUrl = href;
+                                } else if (href.startsWith('//')) {
+                                    absoluteUrl = baseUrl.protocol + href;
+                                } else if (href.startsWith('/')) {
+                                    absoluteUrl = baseUrl.origin + href;
+                                } else {
+                                    // URL relative au dossier courant
+                                    const currentUrl = new URL(pageUrl);
+                                    absoluteUrl = new URL(href, currentUrl.href).href;
+                                }
+                                
+                                const linkUrl = new URL(absoluteUrl);
+                                
+                                // Vérifier que c'est le même domaine
+                                if (linkUrl.hostname === baseUrl.hostname) {
+                                    // Nettoyer l'URL (supprimer fragment, normaliser)
+                                    linkUrl.hash = ''; // Supprimer le fragment
+                                    const cleanUrl = linkUrl.href;
+                                    
+                                    // Ignorer les fichiers non-HTML
+                                    const pathname = linkUrl.pathname.toLowerCase();
+                                    const skipExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', 
+                                                          '.zip', '.rar', '.tar', '.gz', '.jpg', '.jpeg', '.png', 
+                                                          '.gif', '.svg', '.ico', '.css', '.js', '.xml', '.json',
+                                                          '.mp3', '.mp4', '.avi', '.mov', '.wmv', '.txt'];
+                                    
+                                    const hasSkipExtension = skipExtensions.some(ext => pathname.endsWith(ext));
+                                    
+                                    if (!hasSkipExtension) {
+                                        links.add(cleanUrl);
+                                    }
+                                }
+                            } catch (urlError) {
+                                // URL mal formée, on l'ignore
+                                continue;
+                            }
+                        }
+                    }
+                    
+                    // Convertir Set en Array et supprimer l'URL actuelle pour éviter les doublons
+                    const uniqueLinks = Array.from(links).filter(url => url !== pageUrl);
+                    
+                    console.log(`🔗 ${uniqueLinks.length} liens extraits de ${pageUrl}`);
+                    return uniqueLinks;
+                    
+                } catch (e) {
+                    console.log(`❌ Erreur extraction liens de ${pageUrl}:`, e.message);
+                    return [];
+                }
+            }
+
+            // Analyser une page
+            async analyzePage(url) {
+                const startTime = Date.now();
+                
+                try {
+                    const response = await fetch(this.corsProxy + encodeURIComponent(url));
+                    const responseTime = Date.now() - startTime;
+                    
+                    const result = {
+                        url: url,
+                        status: response.status,
+                        responseTime: responseTime,
+                        titleLen: 0,
+                        title: '',
+                        metaDescLen: 0,
+                        metaDesc: '',
+                        h1Count: 0,
+                        wordCount: 0,
+                        issues: [],
+                        issuesCount: 0
+                    };
+
+                    if (!response.ok) {
+                        result.issues.push(`HTTP ${response.status}`);
+                        result.issuesCount = 1;
+                        return result;
+                    }
+
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Analyser le titre
+                    const titleElement = doc.querySelector('title');
+                    if (titleElement) {
+                        result.title = titleElement.textContent.trim();
+                        result.titleLen = result.title.length;
+                    }
+                    
+                    if (!result.title) {
+                        result.issues.push('Missing title');
+                    } else if (result.titleLen < 10) {
+                        result.issues.push('Title too short');
+                    } else if (result.titleLen > 65) {
+                        result.issues.push('Title too long');
+                    }
+
+                    // Analyser la meta description
+                    const metaDescElement = doc.querySelector('meta[name="description"]');
+                    if (metaDescElement) {
+                        result.metaDesc = metaDescElement.getAttribute('content') || '';
+                        result.metaDescLen = result.metaDesc.length;
+                    }
+                    
+                    if (!result.metaDesc) {
+                        result.issues.push('Missing meta description');
+                    } else if (result.metaDescLen < 50) {
+                        result.issues.push('Meta description too short');
+                    } else if (result.metaDescLen > 160) {
+                        result.issues.push('Meta description too long');
+                    }
+
+                    // Analyser les H1
+                    const h1Elements = doc.querySelectorAll('h1');
+                    result.h1Count = h1Elements.length;
+                    
+                    if (result.h1Count === 0) {
+                        result.issues.push('Missing H1');
+                    } else if (result.h1Count > 1) {
+                        result.issues.push('Multiple H1 tags');
+                    }
+
+                    // Analyser le contenu textuel
+                    const bodyElement = doc.querySelector('body');
+                    if (bodyElement) {
+                        // Supprimer les scripts et styles
+                        const scripts = bodyElement.querySelectorAll('script, style');
+                        scripts.forEach(el => el.remove());
+                        
+                        const textContent = bodyElement.textContent || bodyElement.innerText || '';
+                        const words = textContent.trim().split(/\s+/).filter(word => word.length > 1);
+                        result.wordCount = words.length;
+                    }
+                    
+                    if (result.wordCount < 150) {
+                        result.issues.push('Low word count');
+                    }
+
+                    // Analyser les images sans alt
+                    const images = doc.querySelectorAll('img');
+                    let imagesWithoutAlt = 0;
+                    images.forEach(img => {
+                        const alt = img.getAttribute('alt');
+                        if (!alt || alt.trim() === '') {
+                            imagesWithoutAlt++;
+                        }
+                    });
+                    
+                    if (imagesWithoutAlt > 0) {
+                        result.issues.push(`${imagesWithoutAlt} images without alt`);
+                    }
+
+                    // Analyser la balise canonical
+                    const canonicalElement = doc.querySelector('link[rel="canonical"]');
+                    if (!canonicalElement) {
+                        result.issues.push('Missing canonical');
+                    }
+
+                    // Analyser les meta robots
+                    const robotsElement = doc.querySelector('meta[name="robots"]');
+                    if (robotsElement) {
+                        const robotsContent = robotsElement.getAttribute('content') || '';
+                        if (robotsContent.toLowerCase().includes('noindex')) {
+                            result.issues.push('Noindex directive found');
+                        }
+                    }
+
+                    result.issuesCount = result.issues.length;
+                    return result;
+
+                } catch (error) {
+                    return {
+                        url: url,
+                        status: 0,
+                        responseTime: Date.now() - startTime,
+                        titleLen: 0,
+                        title: '',
+                        metaDescLen: 0,
+                        metaDesc: '',
+                        h1Count: 0,
+                        wordCount: 0,
+                        issues: [`Error: ${error.message}`],
+                        issuesCount: 1
+                    };
+                }
+            }
+
+            // Analyser un site complet
+            async analyzeSite(domain, maxPages, homepageOnly, progressCallback) {
+                this.results = [];
+                
+                // Découvrir les URLs
+                const urls = await this.discoverUrls(domain, maxPages, homepageOnly);
+                
+                let analyzed = 0;
+                
+                for (const url of urls) {
+                    progressCallback({
+                        current: analyzed + 1,
+                        total: urls.length,
+                        url: url,
+                        progress: ((analyzed + 1) / urls.length) * 100
+                    });
+                    
+                    const result = await this.analyzePage(url);
+                    this.results.push(result);
+                    analyzed++;
+                    
+                    // Petit délai pour ne pas surcharger
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                return this.generateSummary();
+            }
+
+            // Générer le résumé
+            generateSummary() {
+                const totalPages = this.results.length;
+                const pagesWithIssues = this.results.filter(r => r.issuesCount > 0).length;
+                const totalIssues = this.results.reduce((sum, r) => sum + r.issuesCount, 0);
+                const avgResponseTime = Math.floor(this.results.reduce((sum, r) => sum + r.responseTime, 0) / totalPages);
+                
+                // Top des problèmes
+                const issueCount = {};
+                this.results.forEach(result => {
+                    result.issues.forEach(issue => {
+                        issueCount[issue] = (issueCount[issue] || 0) + 1;
+                    });
+                });
+                
+                const topIssues = Object.entries(issueCount)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 5);
+
+                return {
+                    domain: this.results[0]?.url.split('/')[0] + '//' + this.results[0]?.url.split('/')[2],
+                    totalPages: totalPages,
+                    pagesWithIssues: pagesWithIssues,
+                    avgResponseTime: avgResponseTime,
+                    totalIssues: totalIssues,
+                    topIssues: topIssues,
+                    pages: this.results
+                };
+            }
+        }
+
+        // Fonctions d'affichage des sections
+        function showSection(sectionName) {
+            // Masquer toutes les sections
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('progressSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('historySection').classList.add('hidden');
+
+            // Afficher la section demandée
+            document.getElementById(sectionName + 'Section').classList.remove('hidden');
+
+            // Actions spécifiques par section
+            if (sectionName === 'history') {
+                loadHistory();
+            }
+        }
+
+        // Démarrer l'analyse
+        async function startAnalysis(event) {
+            event.preventDefault();
+            
+            const domain = document.getElementById('domain').value;
+            const maxPages = document.getElementById('maxPages').value;
+            
+            if (!domain) {
+                showToast('Veuillez saisir une URL', 'danger');
+                return;
+            }
+
+            // Validation URL simple
+            try {
+                new URL(domain);
+            } catch (e) {
+                showToast('URL invalide', 'danger');
+                return;
+            }
+
+            // Mode client pur : lancer l'analyse JavaScript directement
+            await startClientAnalysis(domain, maxPages);
+        }
+
+        // Mode client pur - pas besoin de détection serveur
+
+        // Lancer une analyse côté client
+        async function startClientAnalysis(domain, maxPages) {
+            try {
+                showSection('progress');
+                updateProgress(0, 'Démarrage de l\'analyse...');
+                
+                // Lancer l'analyse
+                // Démarrer l'analyse client directe
+                analyzer = new RealSEOAnalyzer();
+                
+                showToast('Démarrage de l\'analyse SEO...', 'info');
+                showSection('progress');
+                
+                try {
+                    const results = await analyzer.analyzeDomain(domain, maxPages, (current, total, url) => {
+                        updateProgress(current, total, url);
+                    });
+                    
+                    currentResults = {
+                        metadata: {
+                            domain: domain,
+                            analysis_date: new Date().toISOString(),
+                            total_pages: results.length,
+                            analysis_id: `client_${Date.now()}`
+                        },
+                        summary: analyzer.getSummary(results),
+                        pages: results
+                    };
+                    
+                    // Sauvegarder localement
+                    saveAnalysisLocally(currentResults);
+                    
+                    showResults();
+                    showToast('Analyse terminée avec succès!', 'success');
+                    
+                } catch (error) {
+                    console.error('Erreur lors de l\'analyse:', error);
+                    showToast('Erreur lors de l\'analyse: ' + error.message, 'danger');
+                    showSection('home');
+                }
+                
+                return;
+                
+                /* Code serveur supprimé
+                const response = await fetch('/api/start-analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        domain: domain,
+                        maxPages: parseInt(maxPages)
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur serveur: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                currentAnalysisId = data.analysis_id;
+                showToast('Analyse démarrée sur le serveur !', 'success');
+                
+                // Surveiller le progrès
+                monitorAnalysisProgress();
+                
+            } catch (error) {
+                console.error('Erreur lors du démarrage de l\'analyse:', error);
+                showToast(`Erreur: ${error.message}`, 'danger');
+                showSection('home');
+            }
+        }
+
+        // Surveiller le progrès de l'analyse
+        function monitorAnalysisProgress() {
+            let progress = 0;
+            let messages = [
+                'Connexion au site web...',
+                'Découverte des pages...',
+                'Analyse des contenus...',
+                'Extraction de la structure des titres...',
+                'Vérification des liens...',
+                'Analyse des métadonnées...',
+                'Finalisation de l\'analyse...'
+            ];
+            
+            let messageIndex = 0;
+            
+            progressInterval = setInterval(async () => {
+                // Simuler un progrès visuel
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90;
+                
+                if (messageIndex < messages.length - 1 && progress > (messageIndex + 1) * 12) {
+                    messageIndex++;
+                }
+                
+                updateProgress(progress, messages[messageIndex]);
+                
+                // Vérifier le statut réel
+                if (currentAnalysisId) {
+                    try {
+                        const response = await fetch('/api/analysis-status', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                analysis_id: currentAnalysisId
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            const status = await response.json();
+                            
+                            if (status.status === 'completed') {
+                                clearInterval(progressInterval);
+                                updateProgress(100, 'Analyse terminée !');
+                                setTimeout(() => {
+                                    loadLatestAnalysis();
+                                }, 1000);
+                            } else if (status.status === 'error') {
+                                clearInterval(progressInterval);
+                                showToast(`Erreur d'analyse: ${status.error || 'Erreur inconnue'}`, 'danger');
+                                showSection('home');
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Erreur de vérification du statut:', e);
+                    }
+                }
+                
+            }, 500);
+            
+            // Arrêt de sécurité après 5 minutes
+            setTimeout(() => {
+                if (progressInterval) {
+                    clearInterval(progressInterval);
+                    showToast('Analyse trop longue, vérification des résultats...', 'warning');
+                    loadLatestAnalysis();
+                }
+            }, 300000); // 5 minutes
+        }
+
+        // Vérifier s'il y a des données d'analyse récentes
+        async function checkForLatestAnalysis() {
+            try {
+                const response = await fetch('./web_data/latest_analysis.json');
+                return response.ok;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Charger les données de la dernière analyse
+        async function loadLatestAnalysis() {
+            try {
+                const response = await fetch('./web_data/latest_analysis.json');
+                if (!response.ok) throw new Error('Fichier de données non trouvé');
+                
+                const data = await response.json();
+                currentResults = transformPythonDataToWebFormat(data);
+                
+                displayResults();
+                showSection('results');
+                showToast('Données d\'analyse chargées avec succès !', 'success');
+                
+                // Charger l'historique aussi
+                loadAnalysisHistory();
+                
+            } catch (error) {
+                console.error('Erreur lors du chargement des données:', error);
+                showToast('Erreur lors du chargement des données. Utilisez l\'analyse Python.', 'danger');
+                const domain = document.getElementById('domain').value;
+                const maxPages = document.getElementById('maxPages').value;
+                showPythonInstructions(domain, maxPages);
+            }
+        }
+
+        // Transformer les données Python au format attendu par l'interface web
+        function transformPythonDataToWebFormat(pythonData) {
+            return {
+                domain: pythonData.metadata.domain,
+                totalPages: pythonData.summary.total_pages,
+                pagesWithIssues: pythonData.summary.pages_with_issues,
+                avgResponseTime: Math.round(pythonData.summary.avg_response_time),
+                totalIssues: pythonData.summary.total_issues,
+                topIssues: pythonData.summary.top_issues,
+                pages: pythonData.pages.map(page => ({
+                    url: page.url,
+                    status: page.status,
+                    responseTime: page.responseTime,
+                    title: page.title,
+                    titleLen: page.titleLen,
+                    metaDesc: page.metaDesc,
+                    metaDescLen: page.metaDescLen,
+                    h1Count: page.h1Count,
+                    wordCount: page.wordCount,
+                    issues: page.issues,
+                    issuesCount: page.issuesCount,
+                    canonical: page.canonical,
+                    canonicalOk: page.canonicalOk,
+                    robotsMeta: page.robotsMeta,
+                    noindex: page.noindex,
+                    nofollow: page.nofollow,
+                    imgNoAlt: page.imgNoAlt,
+                    linksInternal: page.linksInternal,
+                    linksExternal: page.linksExternal,
+                    redirectChain: page.redirectChain,
+                    hreflangCount: page.hreflangCount,
+                    structuredDataCount: page.structuredDataCount,
+                    htmlSize: page.htmlSize,
+                    isCompressed: page.isCompressed,
+                    cacheHeaders: page.cacheHeaders,
+                    headingsStructure: page.headingsStructure || [],
+                    headingsHierarchyIssues: page.headingsHierarchyIssues || []
+                }))
+            };
+        }
+
+        // Afficher les instructions pour utiliser l'analyse Python
+        function showPythonInstructions(domain, maxPages) {
+            const instructions = `
+                <h5><i class="fas fa-terminal me-2"></i>Exécution de l'analyse SEO</h5>
+                <p>Pour analyser ce site avec l'outil Python complet, exécutez cette commande :</p>
+                <div class="bg-dark text-light p-3 rounded mb-3">
+                    <code>python3 run_audit.py ${domain} --web-output</code>
+                </div>
+                <p>Cette commande va :</p>
+                <ul>
+                    <li>Analyser jusqu'à ${maxPages} pages du site</li>
+                    <li>Générer les fichiers de données dans <code>web_data/</code></li>
+                    <li>Permettre l'affichage des résultats dans cette interface</li>
+                </ul>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Astuce :</strong> Après l'exécution, actualisez cette page et relancez l'analyse 
+                    pour voir les vrais résultats SEO.
+                </div>
+                <button class="btn btn-primary" onclick="showSection('home')">
+                    <i class="fas fa-arrow-left me-2"></i>Retour
+                </button>
+            `;
+            
+            showModal('Instructions d\'analyse SEO', instructions);
+        }
+
+        // Charger l'historique des analyses
+        async function loadAnalysisHistory() {
+            try {
+                const response = await fetch('./web_data/analysis_history.json');
+                if (response.ok) {
+                    analysisHistory = await response.json();
+                }
+            } catch (e) {
+                analysisHistory = [];
+            }
+        }
+
+        // Démarrer une vraie analyse
+        async function startRealAnalysis() {
+            const analyzer = new RealSEOAnalyzer();
+            
+            try {
+                // Callback pour mettre à jour la progression
+                const progressCallback = (data) => {
+                    updateProgressUI(data);
+                };
+
+                showToast('Démarrage de l\'analyse...', 'info');
+                
+                const results = await analyzer.analyzeSite(
+                    currentAnalysis.domain,
+                    currentAnalysis.maxPages,
+                    currentAnalysis.homepageOnly,
+                    progressCallback
+                );
+
+                // Analyse terminée
+                currentAnalysis.endTime = new Date();
+                currentAnalysis.status = 'completed';
+                currentAnalysis.results = results;
+
+                // Sauvegarder dans l'historique
+                analysisHistory.unshift(currentAnalysis);
+                localStorage.setItem('seoAuditHistory', JSON.stringify(analysisHistory));
+
+                currentResults = results;
+                displayResults();
+                showSection('results');
+                
+                showToast('Analyse terminée avec succès !', 'success');
+                
+            } catch (error) {
+                console.error('Erreur lors de l\'analyse:', error);
+                showToast(`Erreur lors de l'analyse: ${error.message}`, 'danger');
+                currentAnalysis.status = 'error';
+                currentAnalysis.error = error.message;
+                showSection('home');
+            }
+        }
+
+        // Mettre à jour l'interface de progression
+        function updateProgressUI(data) {
+            const progress = Math.round(data.progress);
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = progress + '%';
+            document.getElementById('pagesAnalyzed').textContent = data.current;
+            document.getElementById('totalPages').textContent = data.total;
+            document.getElementById('currentUrl').textContent = data.url;
+            
+            // Calcul approximatif du temps
+            if (data.current > 0) {
+                const elapsed = (Date.now() - currentAnalysis.startTime.getTime()) / 1000;
+                const eta = ((data.total - data.current) / data.current) * elapsed;
+                
+                document.getElementById('timeElapsed').textContent = Math.round(elapsed) + 's';
+                document.getElementById('timeRemaining').textContent = Math.round(eta) + 's';
+            }
+        }
+
+        // Arrêter l'analyse en cours
+        function stopAnalysis() {
+            if (currentAnalysis && currentAnalysis.status === 'running') {
+                currentAnalysis.status = 'stopped';
+                showToast('Analyse arrêtée par l\'utilisateur', 'warning');
+                showSection('home');
+            }
+        }
+
+
+        // Afficher les résultats
+        function displayResults() {
+            if (!currentResults) return;
+
+            // Mettre à jour les informations générales
+            document.getElementById('analyzedDomain').textContent = currentResults.domain;
+            document.getElementById('analysisDate').textContent = new Date().toLocaleString('fr-FR');
+
+            // Créer les cartes de résumé
+            createSummaryCards();
+            
+            // Afficher le top des problèmes
+            displayTopIssues();
+            
+            // Créer les graphiques
+            createCharts();
+            
+            // Afficher le tableau des résultats
+            displayResultsTable();
+        }
+
+        // Créer les cartes de résumé
+        function createSummaryCards() {
+            const summaryCards = document.getElementById('summaryCards');
+            summaryCards.innerHTML = `
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card bg-primary text-white stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <i class="fas fa-file-alt fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4>${currentResults.totalPages}</h4>
+                                    <div>Pages analysées</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card bg-danger text-white stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4>${currentResults.pagesWithIssues}</h4>
+                                    <div>Pages avec problèmes</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card bg-warning text-white stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <i class="fas fa-bug fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4>${currentResults.totalIssues}</h4>
+                                    <div>Total des problèmes</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="card bg-info text-white stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <i class="fas fa-clock fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h4>${currentResults.avgResponseTime}ms</h4>
+                                    <div>Temps de réponse moyen</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Afficher le top des problèmes
+        function displayTopIssues() {
+            const topIssuesContent = document.getElementById('topIssuesContent');
+            let html = '<div class="row">';
+            
+            currentResults.topIssues.forEach(([issue, count]) => {
+                const percentage = Math.round((count / currentResults.totalPages) * 100);
+                html += `
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="badge bg-danger rounded-pill me-3">${count}</div>
+                            <div>
+                                <strong>${issue}</strong><br>
+                                <small class="text-muted">${percentage}% des pages</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            topIssuesContent.innerHTML = html;
+        }
+
+        // Créer les graphiques
+        function createCharts() {
+            // Graphique des problèmes
+            const issuesCtx = document.getElementById('issuesChart').getContext('2d');
+            new Chart(issuesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: currentResults.topIssues.map(item => item[0]),
+                    datasets: [{
+                        data: currentResults.topIssues.map(item => item[1]),
+                        backgroundColor: [
+                            '#dc3545', '#fd7e14', '#ffc107', '#20c997', '#0dcaf0'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Graphique des longueurs de titres
+            const titleLengthCtx = document.getElementById('titleLengthChart').getContext('2d');
+            const titleRanges = {
+                'Manquant (0)': 0,
+                'Trop court (<30)': 0,
+                'Optimal (30-60)': 0,
+                'Trop long (>60)': 0
+            };
+            
+            currentResults.pages.forEach(page => {
+                if (page.titleLen === 0) titleRanges['Manquant (0)']++;
+                else if (page.titleLen < 30) titleRanges['Trop court (<30)']++;
+                else if (page.titleLen <= 60) titleRanges['Optimal (30-60)']++;
+                else titleRanges['Trop long (>60)']++;
+            });
+            
+            new Chart(titleLengthCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(titleRanges),
+                    datasets: [{
+                        data: Object.values(titleRanges),
+                        backgroundColor: ['#dc3545', '#ffc107', '#198754', '#fd7e14']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Afficher le tableau des résultats
+        function displayResultsTable() {
+            const tableBody = document.getElementById('resultsTableBody');
+            let html = '';
+            
+            currentResults.pages.forEach((page, index) => {
+                const statusClass = page.status === 200 ? 'success' : (page.status < 400 ? 'warning' : 'danger');
+                const timeClass = page.responseTime > 3000 ? 'danger' : (page.responseTime > 1000 ? 'warning' : 'success');
+                const titleClass = page.titleLen === 0 ? 'danger' : (page.titleLen < 30 || page.titleLen > 60 ? 'warning' : 'success');
+                const metaDescClass = page.metaDescLen === 0 ? 'danger' : (page.metaDescLen < 120 || page.metaDescLen > 160 ? 'warning' : 'success');
+                const h1Class = page.h1Count === 0 ? 'danger' : (page.h1Count === 1 ? 'success' : 'warning');
+                const wordsClass = page.wordCount < 300 ? 'warning' : 'success';
+                
+                html += `
+                    <tr data-status="${page.status}" data-issues="${page.issuesCount}" data-url="${page.url}" data-title="${page.title}">
+                        <td>
+                            <a href="${page.url}" target="_blank" class="text-decoration-none url-truncate">
+                                <i class="fas fa-external-link-alt me-1 text-muted"></i>
+                                ${getRelativeUrl(page.url)}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge bg-${statusClass}">${page.status}</span>
+                        </td>
+                        <td>
+                            <span class="text-${timeClass}">${page.responseTime}ms</span>
+                        </td>
+                        <td>
+                            <div>
+                                <span class="text-${titleClass}">${page.titleLen || 'Manquant'} chars</span>
+                            </div>
+                            ${page.title ? `<small class="text-muted">${page.title.substring(0, 30)}${page.title.length > 30 ? '...' : ''}</small>` : ''}
+                        </td>
+                        <td>
+                            <span class="text-${metaDescClass}">${page.metaDescLen || 'Manquant'} chars</span>
+                        </td>
+                        <td>
+                            <span class="text-${h1Class}">${page.h1Count}</span>
+                        </td>
+                        <td>
+                            <span class="text-${wordsClass}">${page.wordCount}</span>
+                        </td>
+                        <td>
+                            ${page.issuesCount > 0 ? `<span class="badge bg-danger">${page.issuesCount}</span>` : '<span class="badge bg-success">0</span>'}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-info" onclick="showPageDetails(${index})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+        }
+
+        // Fonction pour obtenir l'URL relative sans le domaine principal
+        function getRelativeUrl(fullUrl) {
+            if (!currentResults || !currentResults.domain) return fullUrl;
+            
+            try {
+                const domain = new URL(currentResults.domain).origin;
+                const pageUrl = new URL(fullUrl);
+                
+                // Si c'est le même domaine, retourner juste le path + query + fragment
+                if (pageUrl.origin === domain) {
+                    let relativePath = pageUrl.pathname;
+                    if (pageUrl.search) relativePath += pageUrl.search;
+                    if (pageUrl.hash) relativePath += pageUrl.hash;
+                    
+                    // Si c'est juste "/", afficher "Accueil"
+                    return relativePath === '/' ? '/ (Accueil)' : relativePath;
+                }
+                
+                // Si domaine différent, afficher l'URL complète
+                return fullUrl;
+            } catch (e) {
+                // En cas d'erreur, retourner l'URL complète
+                return fullUrl;
+            }
+        }
+
+        // Afficher les détails d'une page
+        function showPageDetails(index) {
+            const page = currentResults.pages[index];
+            
+            const details = `
+                <div class="page-details">
+                    <!-- URL et informations principales -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">
+                            <h6 class="mb-0"><i class="fas fa-globe me-2"></i>Informations générales</h6>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>URL :</strong> <a href="${page.url}" target="_blank">${page.url}</a></p>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <strong>Statut HTTP :</strong><br>
+                                    <span class="badge bg-${page.status === 200 ? 'success' : (page.status < 400 ? 'warning' : 'danger')}">${page.status}</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Temps de réponse :</strong><br>
+                                    <span class="text-${page.responseTime > 3000 ? 'danger' : (page.responseTime > 1000 ? 'warning' : 'success')}">${page.responseTime}ms</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Taille HTML :</strong><br>
+                                    ${page.htmlSize ? Math.round(page.htmlSize / 1024) + ' KB' : 'N/A'}
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Compression :</strong><br>
+                                    <span class="badge bg-${page.isCompressed ? 'success' : 'warning'}">${page.isCompressed ? 'GZIP' : 'Non compressé'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEO On-Page -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-search me-2"></i>SEO On-Page</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <strong>Titre de la page :</strong>
+                                <span class="badge bg-${page.titleLen === 0 ? 'danger' : (page.titleLen < 30 || page.titleLen > 60 ? 'warning' : 'success')}">${page.titleLen} caractères</span>
+                                ${page.title ? `<div class="mt-1 p-2 bg-light rounded"><small>${page.title}</small></div>` : '<div class="mt-1 text-muted"><em>Titre manquant</em></div>'}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <strong>Meta description :</strong>
+                                <span class="badge bg-${page.metaDescLen === 0 ? 'danger' : (page.metaDescLen < 120 || page.metaDescLen > 160 ? 'warning' : 'success')}">${page.metaDescLen} caractères</span>
+                                ${page.metaDesc ? `<div class="mt-1 p-2 bg-light rounded"><small>${page.metaDesc}</small></div>` : '<div class="mt-1 text-muted"><em>Meta description manquante</em></div>'}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Balises H1 :</strong><br>
+                                    <span class="badge bg-${page.h1Count === 0 ? 'danger' : (page.h1Count === 1 ? 'success' : 'warning')}">${page.h1Count}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Nombre de mots :</strong><br>
+                                    <span class="text-${page.wordCount < 300 ? 'warning' : 'success'}">${page.wordCount}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Images sans alt :</strong><br>
+                                    <span class="badge bg-${page.imgNoAlt === 0 ? 'success' : 'danger'}">${page.imgNoAlt}</span>
+                                </div>
+                            </div>
+
+                            ${page.canonical ? `
+                                <div class="mt-3">
+                                    <strong>URL Canonique :</strong>
+                                    <span class="badge bg-${page.canonicalOk ? 'success' : 'warning'}">${page.canonicalOk ? 'Valide' : 'Problème'}</span>
+                                    <div class="mt-1 p-2 bg-light rounded"><small><code>${page.canonical}</code></small></div>
+                                </div>
+                            ` : ''}
+
+                            ${page.robotsMeta ? `
+                                <div class="mt-3">
+                                    <strong>Meta robots :</strong>
+                                    <code>${page.robotsMeta}</code>
+                                    ${page.noindex ? '<span class="badge bg-danger ms-2">NOINDEX</span>' : ''}
+                                    ${page.nofollow ? '<span class="badge bg-warning ms-2">NOFOLLOW</span>' : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Structure des titres -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-list-ol me-2"></i>Structure des titres (H1-H6)</h6>
+                        </div>
+                        <div class="card-body">
+                            ${page.headingsStructure && page.headingsStructure.length > 0 ? `
+                                <div class="heading-structure">
+                                    ${page.headingsStructure.map((heading, index) => `
+                                        <div class="heading-item mb-2 d-flex align-items-start">
+                                            <div class="heading-level me-3">
+                                                <span class="badge bg-${{
+                                                    1: 'primary', 2: 'secondary', 3: 'success', 
+                                                    4: 'info', 5: 'warning', 6: 'dark'
+                                                }[heading.level] || 'secondary'} fs-6">
+                                                    H${heading.level}
+                                                </span>
+                                            </div>
+                                            <div class="heading-content flex-grow-1">
+                                                <div class="heading-text" style="margin-left: ${(heading.level - 1) * 20}px;">
+                                                    ${heading.text}
+                                                </div>
+                                                <small class="text-muted">Position: ${heading.position + 1}</small>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                
+                                ${page.headingsHierarchyIssues && page.headingsHierarchyIssues.length > 0 ? `
+                                    <div class="mt-3 alert alert-warning">
+                                        <strong><i class="fas fa-exclamation-triangle me-2"></i>Problèmes de hiérarchie :</strong>
+                                        <ul class="mb-0 mt-2">
+                                            ${page.headingsHierarchyIssues.map(issue => `<li>${issue}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                ` : `
+                                    <div class="mt-3 alert alert-success">
+                                        <i class="fas fa-check-circle me-2"></i>Structure de titrage correcte
+                                    </div>
+                                `}
+                            ` : `
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Aucun titre trouvé sur cette page
+                                </div>
+                            `}
+                        </div>
+                    </div>
+
+                    <!-- Liens et contenu avancé -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-link me-2"></i>Liens et fonctionnalités avancées</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Liens internes :</strong> <span class="badge bg-info">${page.linksInternal}</span><br>
+                                    <strong>Liens externes :</strong> <span class="badge bg-secondary">${page.linksExternal}</span>
+                                </div>
+                                <div class="col-md-6">
+                                    ${page.hreflangCount > 0 ? `<strong>Hreflang :</strong> <span class="badge bg-info">${page.hreflangCount}</span><br>` : ''}
+                                    ${page.structuredDataCount > 0 ? `<strong>Données structurées :</strong> <span class="badge bg-success">${page.structuredDataCount}</span>` : ''}
+                                </div>
+                            </div>
+
+                            ${page.redirectChain && page.redirectChain.length > 0 ? `
+                                <div class="mt-3">
+                                    <strong>Chaîne de redirection (${page.redirectChain.length} étapes) :</strong>
+                                    <div class="mt-1">
+                                        ${page.redirectChain.map((url, i) => `
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="badge bg-secondary me-2">${i + 1}</span>
+                                                <small>${url}</small>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            ${page.cacheHeaders && Object.keys(page.cacheHeaders).length > 0 ? `
+                                <div class="mt-3">
+                                    <strong>En-têtes de cache :</strong>
+                                    <div class="mt-1">
+                                        ${Object.entries(page.cacheHeaders).map(([header, value]) => `
+                                            <div><code>${header}:</code> <small>${value}</small></div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Problèmes détectés -->
+                    ${page.issues && page.issues.length > 0 ? `
+                        <div class="card">
+                            <div class="card-header bg-danger text-white">
+                                <h6 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Problèmes détectés (${page.issues.length})</h6>
+                            </div>
+                            <div class="card-body">
+                                ${page.issues.map(issue => `
+                                    <div class="alert alert-warning py-2 mb-2">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>${issue}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i>Aucun problème détecté</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted mb-0">Cette page ne présente aucun problème SEO majeur selon notre analyse.</p>
+                            </div>
+                        </div>
+                    `}
+                </div>
+
+                <style>
+                .page-details .card {
+                    border: none;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+                .page-details .card-header {
+                    border-bottom: none;
+                    font-weight: 600;
+                }
+                .page-details code {
+                    background: #f8f9fa;
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                    font-size: 0.85em;
+                }
+                .heading-structure {
+                    background: #f8f9fa;
+                    border-radius: 8px;
+                    padding: 15px;
+                }
+                .heading-item {
+                    border-left: 3px solid #e9ecef;
+                    padding-left: 10px;
+                    margin-left: 10px;
+                    transition: all 0.2s ease;
+                }
+                .heading-item:hover {
+                    border-left-color: var(--primary-color);
+                    background: rgba(13, 110, 253, 0.05);
+                }
+                .heading-text {
+                    font-weight: 500;
+                    color: #495057;
+                    line-height: 1.4;
+                }
+                .heading-level .badge {
+                    font-size: 0.7rem;
+                    padding: 4px 8px;
+                    min-width: 35px;
+                }
+                </style>
+            `;
+            
+            showModal(`Détails - Page ${index + 1}`, details);
+        }
+
+        // Basculer l'affichage des filtres
+        function toggleFilters() {
+            const filtersPanel = document.getElementById('filtersPanel');
+            filtersPanel.classList.toggle('hidden');
+        }
+
+        // Appliquer les filtres
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const issuesFilter = document.getElementById('issuesFilter').value;
+            const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
+            
+            const rows = document.querySelectorAll('#resultsTable tbody tr');
+            
+            rows.forEach(row => {
+                let show = true;
+                
+                // Filtre par statut
+                if (statusFilter && row.dataset.status !== statusFilter) {
+                    show = false;
+                }
+                
+                // Filtre par problèmes
+                if (issuesFilter) {
+                    const hasIssues = parseInt(row.dataset.issues) > 0;
+                    if (issuesFilter === 'with-issues' && !hasIssues) show = false;
+                    if (issuesFilter === 'no-issues' && hasIssues) show = false;
+                }
+                
+                // Filtre par recherche
+                if (searchFilter) {
+                    const url = row.dataset.url.toLowerCase();
+                    const title = row.dataset.title.toLowerCase();
+                    if (!url.includes(searchFilter) && !title.includes(searchFilter)) {
+                        show = false;
+                    }
+                }
+                
+                row.style.display = show ? '' : 'none';
+            });
+        }
+
+        // Télécharger les résultats
+        function downloadResults(format) {
+            if (!currentResults) return;
+            
+            let content = '';
+            let filename = '';
+            let mimeType = '';
+            
+            if (format === 'json') {
+                content = JSON.stringify(currentResults, null, 2);
+                filename = `seo-audit-${Date.now()}.json`;
+                mimeType = 'application/json';
+            } else if (format === 'csv') {
+                // En-têtes CSV
+                content = 'URL,Statut,Temps,Titre_Longueur,MetaDesc_Longueur,H1,Mots,Problemes\n';
+                
+                // Données
+                currentResults.pages.forEach(page => {
+                    content += `"${page.url}","${page.status}","${page.responseTime}","${page.titleLen}","${page.metaDescLen}","${page.h1Count}","${page.wordCount}","${page.issues.join('; ')}"\n`;
+                });
+                
+                filename = `seo-audit-${Date.now()}.csv`;
+                mimeType = 'text/csv';
+            }
+            
+            // Créer et télécharger le fichier
+            const blob = new Blob([content], { type: mimeType });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            showToast(`Fichier ${format.toUpperCase()} téléchargé`, 'success');
+        }
+
+        // Exporter en PDF côté serveur (fonction renommée)
+        async function exportServerPDF() {
+            const pdfBtn = document.getElementById('serverPdfOption');
+            
+            if (!isServerMode) {
+                showToast('Export PDF disponible uniquement en mode serveur', 'warning');
+                showModal('Export PDF', `
+                    <div class="text-center">
+                        <i class="fas fa-server fa-3x text-muted mb-3"></i>
+                        <h5>Export PDF via serveur</h5>
+                        <p>Pour générer un rapport PDF complet, utilisez le mode serveur :</p>
+                        <div class="bg-dark text-light p-3 rounded mb-3">
+                            <code>python3 simple_server.py</code>
+                        </div>
+                        <p class="text-muted">Le serveur permet la génération de rapports PDF professionnels avec tous les détails d'analyse.</p>
+                    </div>
+                `);
+                return;
+            }
+            
+            // Désactiver le bouton pendant la génération
+            pdfBtn.disabled = true;
+            pdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Génération...';
+            
+            try {
+                showToast('Génération du rapport PDF...', 'info');
+                
+                const response = await fetch('/api/export-pdf', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur serveur: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error + (result.message ? ' - ' + result.message : ''));
+                }
+                
+                if (result.success) {
+                    // Télécharger automatiquement le PDF
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = result.download_url;
+                    downloadLink.download = result.filename;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    
+                    const sizeKB = Math.round(result.size / 1024);
+                    showToast(`Rapport PDF téléchargé (${sizeKB} KB)`, 'success');
+                    
+                    // Afficher un modal de confirmation
+                    showModal('Rapport PDF généré', `
+                        <div class="text-center">
+                            <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                            <h5>Rapport d'audit SEO généré !</h5>
+                            <p><strong>Fichier :</strong> ${result.filename}</p>
+                            <p><strong>Taille :</strong> ${sizeKB} KB</p>
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Le rapport PDF contient l'analyse complète : résumé exécutif, 
+                                détails par page, structure des titres, et recommandations personnalisées.
+                            </div>
+                        </div>
+                    `);
+                }
+                
+            } catch (error) {
+                console.error('Erreur export PDF:', error);
+                
+                let errorMessage = error.message;
+                if (errorMessage.includes('ReportLab')) {
+                    errorMessage += '<br><br>Pour installer ReportLab :<br><code>pip install reportlab</code>';
+                }
+                
+                showToast('Erreur lors de la génération PDF', 'danger');
+                showModal('Erreur Export PDF', `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Erreur :</strong><br>
+                        ${errorMessage}
+                    </div>
+                `);
+                
+            } finally {
+                // Réactiver le bouton
+                pdfBtn.disabled = false;
+                pdfBtn.innerHTML = '<i class="fas fa-file-pdf me-1"></i>PDF';
+            }
+        }
+
+        // Exporter en PDF côté client (jsPDF)
+        async function exportClientPDF() {
+            if (!currentResults || !currentResults.pages) {
+                showToast('Aucune donnée à exporter', 'warning');
+                return;
+            }
+
+            const pdfBtn = document.getElementById('exportClientPdfBtn');
+            const originalContent = pdfBtn.innerHTML;
+            
+            try {
+                pdfBtn.disabled = true;
+                pdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Génération...';
+                showToast('Génération du PDF côté client...', 'info');
+
+                // Créer le générateur PDF
+                const pdfGenerator = new ClientPDFGenerator(currentResults);
+                const pdfBlob = await pdfGenerator.generatePDF();
+                
+                // Télécharger le PDF
+                const url = URL.createObjectURL(pdfBlob);
+                const a = document.createElement('a');
+                const domain = currentResults.domain.replace(/https?:\/\//, '').replace(/\//g, '_');
+                const timestamp = Date.now();
+                const filename = `audit_seo_${domain}_${timestamp}.pdf`;
+                
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                const sizeKB = Math.round(pdfBlob.size / 1024);
+                showToast(`PDF généré côté client (${sizeKB} KB)`, 'success');
+                
+                // Modal de confirmation
+                showModal('PDF généré', `
+                    <div class="text-center">
+                        <i class="fas fa-file-pdf fa-3x text-success mb-3"></i>
+                        <h5>Rapport PDF généré côté client !</h5>
+                        <p><strong>Fichier :</strong> ${filename}</p>
+                        <p><strong>Taille :</strong> ${sizeKB} KB</p>
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Ce PDF a été généré directement dans votre navigateur et contient 
+                            l'analyse complète avec détails par page et recommandations.
+                        </div>
+                    </div>
+                `);
+
+            } catch (error) {
+                console.error('Erreur génération PDF client:', error);
+                showToast('Erreur lors de la génération PDF', 'danger');
+                showModal('Erreur PDF', `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Erreur :</strong> ${error.message}
+                    </div>
+                `);
+            } finally {
+                pdfBtn.disabled = false;
+                pdfBtn.innerHTML = originalContent;
+            }
+        }
+
+        // Générateur PDF côté client
+        class ClientPDFGenerator {
+            constructor(analysisData) {
+                this.data = analysisData;
+                this.jsPDF = window.jspdf.jsPDF;
+                this.pageWidth = 210; // A4 width in mm
+                this.pageHeight = 297; // A4 height in mm
+                this.margin = 20;
+                this.contentWidth = this.pageWidth - (this.margin * 2);
+                this.y = this.margin;
+                this.pdf = null;
+            }
+
+            async generatePDF() {
+                this.pdf = new this.jsPDF();
+                
+                // Page de couverture
+                this.addCoverPage();
+                this.pdf.addPage();
+                
+                // Résumé exécutif
+                this.addExecutiveSummary();
+                this.pdf.addPage();
+                
+                // Analyse globale
+                this.addGlobalAnalysis();
+                this.pdf.addPage();
+                
+                // Top des problèmes
+                this.addTopIssues();
+                this.pdf.addPage();
+                
+                // Détails des pages
+                this.addPagesDetails();
+                
+                // Recommandations
+                this.pdf.addPage();
+                this.addRecommendations();
+                
+                return this.pdf.output('blob');
+            }
+
+            addCoverPage() {
+                this.y = 60;
+                
+                // Titre principal
+                this.pdf.setFontSize(24);
+                this.pdf.setTextColor(31, 78, 121); // Bleu foncé
+                this.pdf.text("RAPPORT D'AUDIT SEO", this.pageWidth / 2, this.y, { align: 'center' });
+                
+                this.y += 30;
+                
+                // Informations du site
+                this.pdf.setFontSize(16);
+                this.pdf.setTextColor(44, 90, 160); // Bleu moyen
+                this.pdf.text(`Site web : ${this.data.domain}`, this.margin, this.y);
+                
+                this.y += 10;
+                this.pdf.setFontSize(12);
+                this.pdf.setTextColor(0, 0, 0);
+                const now = new Date();
+                this.pdf.text(`Date d'analyse : ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR')}`, this.margin, this.y);
+                
+                this.y += 8;
+                this.pdf.text(`Pages analysées : ${this.data.totalPages}`, this.margin, this.y);
+                
+                // Résumé rapide
+                this.y += 25;
+                this.addSectionTitle('RÉSUMÉ RAPIDE');
+                
+                const summaryData = [
+                    ['Pages avec problèmes', `${this.data.pagesWithIssues}/${this.data.totalPages}`],
+                    ['Total des problèmes', `${this.data.totalIssues || 'N/A'}`],
+                    ['Temps de réponse moyen', `${this.data.avgResponseTime || 'N/A'} ms`],
+                    ['Statut global', this.getGlobalStatus()]
+                ];
+                
+                this.addTable(summaryData, ['Métrique', 'Valeur']);
+                
+                // Pied de page
+                this.y = this.pageHeight - 40;
+                this.pdf.setFontSize(10);
+                this.pdf.setTextColor(128, 128, 128);
+                this.pdf.text('Généré par l\'outil d\'Audit SEO', this.pageWidth / 2, this.y, { align: 'center' });
+            }
+
+            addExecutiveSummary() {
+                this.y = this.margin;
+                this.addSectionTitle('RÉSUMÉ EXÉCUTIF');
+                
+                this.pdf.setFontSize(12);
+                this.pdf.setTextColor(0, 0, 0);
+                
+                const summaryText = [
+                    `Cette analyse porte sur ${this.data.domain} et couvre ${this.data.totalPages} pages.`,
+                    `L'audit a identifié ${this.data.totalIssues || 0} problèmes répartis sur ${this.data.pagesWithIssues} pages.`,
+                    '',
+                    'Les problèmes les plus fréquents nécessitant une attention immédiate sont :'
+                ];
+                
+                summaryText.forEach(text => {
+                    if (text === '') {
+                        this.y += 5;
+                    } else {
+                        const lines = this.pdf.splitTextToSize(text, this.contentWidth);
+                        lines.forEach(line => {
+                            this.checkPageBreak();
+                            this.pdf.text(line, this.margin, this.y);
+                            this.y += 7;
+                        });
+                    }
+                });
+                
+                // Top problèmes
+                if (this.data.topIssues && this.data.topIssues.length > 0) {
+                    this.y += 5;
+                    this.data.topIssues.slice(0, 5).forEach((issue, i) => {
+                        this.checkPageBreak();
+                        this.pdf.text(`${i + 1}. ${issue[0]} (${issue[1]} occurrences)`, this.margin + 5, this.y);
+                        this.y += 7;
+                    });
+                }
+            }
+
+            addGlobalAnalysis() {
+                this.y = this.margin;
+                this.addSectionTitle('ANALYSE GLOBALE');
+                
+                // Analyse des titres
+                this.addSubTitle('Analyse des titres');
+                const titleStats = this.getTitleStats();
+                if (titleStats) {
+                    const titleData = [
+                        ['Titres optimaux', titleStats.good],
+                        ['Titres trop courts', titleStats.short],
+                        ['Titres trop longs', titleStats.long],
+                        ['Titres manquants', titleStats.missing]
+                    ];
+                    this.addTable(titleData, ['Type', 'Nombre']);
+                }
+                
+                // Analyse des meta descriptions
+                this.y += 10;
+                this.addSubTitle('Analyse des meta descriptions');
+                const metaStats = this.getMetaStats();
+                if (metaStats) {
+                    const metaData = [
+                        ['Meta descriptions optimales', metaStats.good],
+                        ['Meta descriptions trop courtes', metaStats.short],
+                        ['Meta descriptions trop longues', metaStats.long],
+                        ['Meta descriptions manquantes', metaStats.missing]
+                    ];
+                    this.addTable(metaData, ['Type', 'Nombre']);
+                }
+            }
+
+            addTopIssues() {
+                this.y = this.margin;
+                this.addSectionTitle('TOP DES PROBLÈMES');
+                
+                if (!this.data.topIssues || this.data.topIssues.length === 0) {
+                    this.pdf.text('Aucun problème majeur détecté.', this.margin, this.y);
+                    return;
+                }
+                
+                const issuesData = this.data.topIssues.slice(0, 10).map((issue, i) => [
+                    (i + 1).toString(),
+                    issue[0],
+                    issue[1].toString(),
+                    this.getImpactLevel(issue[1], this.data.totalPages)
+                ]);
+                
+                this.addTable(issuesData, ['#', 'Problème', 'Occurrences', 'Impact']);
+            }
+
+            addPagesDetails() {
+                this.y = this.margin;
+                this.addSectionTitle('DÉTAIL PAR PAGE');
+                
+                this.data.pages.forEach((page, index) => {
+                    if (index > 0) this.checkPageBreak(50); // Plus d'espace pour une nouvelle page
+                    
+                    // En-tête de page
+                    this.addSubTitle(`Page ${index + 1}: ${this.getRelativeUrl(page.url)}`);
+                    this.y += 3;
+                    
+                    // URL complète en petite taille
+                    this.pdf.setFontSize(9);
+                    this.pdf.setTextColor(0, 102, 204);
+                    this.pdf.text(page.url, this.margin, this.y);
+                    this.y += 8;
+                    
+                    // Informations techniques
+                    this.pdf.setFontSize(10);
+                    this.pdf.setTextColor(0, 0, 0);
+                    const techData = [
+                        ['Statut HTTP', page.status?.toString() || 'N/A'],
+                        ['Temps de réponse', `${page.responseTime || 0} ms`],
+                        ['Taille HTML', this.formatSize(page.htmlSize || 0)],
+                        ['Compression', page.isCompressed ? 'Oui' : 'Non']
+                    ];
+                    
+                    this.addTable(techData, ['Métrique', 'Valeur'], 8);
+                    
+                    // SEO On-Page
+                    this.y += 8;
+                    this.pdf.setFontSize(11);
+                    this.pdf.setTextColor(44, 90, 160);
+                    this.pdf.text('SEO On-Page', this.margin, this.y);
+                    this.y += 5;
+                    
+                    const seoData = [
+                        ['Titre', `${page.title || 'Manquant'} (${page.titleLen || 0} car.)`, this.getTitleStatus(page.titleLen)],
+                        ['Meta description', `${(page.metaDesc || 'Manquant').substring(0, 30)}... (${page.metaDescLen || 0} car.)`, this.getMetaStatus(page.metaDescLen)],
+                        ['Balises H1', (page.h1Count || 0).toString(), this.getH1Status(page.h1Count)],
+                        ['Nombre de mots', (page.wordCount || 0).toString(), page.wordCount >= 300 ? '✓' : '⚠'],
+                        ['Images sans alt', (page.imgNoAlt || 0).toString(), page.imgNoAlt === 0 ? '✓' : '✗']
+                    ];
+                    
+                    this.addTable(seoData, ['Élément', 'Valeur', 'Statut'], 8);
+                    
+                    // Structure des titres (si disponible)
+                    if (page.headingsStructure && page.headingsStructure.length > 0) {
+                        this.y += 8;
+                        this.pdf.setFontSize(10);
+                        this.pdf.setTextColor(44, 90, 160);
+                        this.pdf.text('Structure des titres', this.margin, this.y);
+                        this.y += 5;
+                        
+                        this.pdf.setFontSize(9);
+                        this.pdf.setTextColor(0, 0, 0);
+                        page.headingsStructure.slice(0, 8).forEach(heading => {
+                            this.checkPageBreak();
+                            const indent = '  '.repeat(heading.level - 1);
+                            this.pdf.text(`${indent}H${heading.level}: ${heading.text}`, this.margin + 5, this.y);
+                            this.y += 5;
+                        });
+                    }
+                    
+                    // Problèmes détectés
+                    if (page.issues && page.issues.length > 0) {
+                        this.y += 8;
+                        this.pdf.setFontSize(10);
+                        this.pdf.setTextColor(220, 53, 69);
+                        this.pdf.text(`⚠ Problèmes détectés (${page.issues.length})`, this.margin, this.y);
+                        this.y += 5;
+                        
+                        this.pdf.setFontSize(9);
+                        this.pdf.setTextColor(0, 0, 0);
+                        page.issues.slice(0, 5).forEach(issue => {
+                            this.checkPageBreak();
+                            this.pdf.text(`• ${issue}`, this.margin + 5, this.y);
+                            this.y += 5;
+                        });
+                    }
+                    
+                    this.y += 10; // Espacement entre les pages
+                });
+            }
+
+            addRecommendations() {
+                this.y = this.margin;
+                this.addSectionTitle('RECOMMANDATIONS');
+                
+                const recommendations = [
+                    'Analysez et corrigez les problèmes les plus fréquents en premier lieu.',
+                    'Concentrez-vous sur les pages avec le plus de trafic pour un impact maximal.',
+                    'Testez les modifications sur un échantillon avant de les déployer massivement.',
+                    'Surveillez les performances après chaque modification.',
+                    'Programmez des audits SEO réguliers pour maintenir la qualité.'
+                ];
+                
+                this.pdf.setFontSize(12);
+                this.pdf.setTextColor(0, 0, 0);
+                
+                recommendations.forEach(rec => {
+                    this.checkPageBreak();
+                    const lines = this.pdf.splitTextToSize(`• ${rec}`, this.contentWidth);
+                    lines.forEach(line => {
+                        this.pdf.text(line, this.margin, this.y);
+                        this.y += 7;
+                    });
+                    this.y += 3;
+                });
+            }
+
+            // Méthodes utilitaires
+            addSectionTitle(title) {
+                this.checkPageBreak();
+                this.pdf.setFontSize(16);
+                this.pdf.setTextColor(44, 90, 160);
+                this.pdf.text(title, this.margin, this.y);
+                this.y += 12;
+            }
+
+            addSubTitle(title) {
+                this.checkPageBreak();
+                this.pdf.setFontSize(12);
+                this.pdf.setTextColor(68, 68, 68);
+                this.pdf.text(title, this.margin, this.y);
+                this.y += 8;
+            }
+
+            addTable(data, headers, fontSize = 10) {
+                const colWidth = this.contentWidth / headers.length;
+                this.pdf.setFontSize(fontSize);
+                
+                // En-têtes
+                this.pdf.setTextColor(255, 255, 255);
+                this.pdf.setFillColor(44, 90, 160);
+                this.pdf.rect(this.margin, this.y - 5, this.contentWidth, 8, 'F');
+                
+                headers.forEach((header, i) => {
+                    this.pdf.text(header, this.margin + (i * colWidth) + 2, this.y);
+                });
+                this.y += 8;
+                
+                // Données
+                this.pdf.setTextColor(0, 0, 0);
+                data.forEach((row, rowIndex) => {
+                    this.checkPageBreak();
+                    
+                    if (rowIndex % 2 === 0) {
+                        this.pdf.setFillColor(248, 249, 250);
+                        this.pdf.rect(this.margin, this.y - 5, this.contentWidth, 7, 'F');
+                    }
+                    
+                    row.forEach((cell, i) => {
+                        const cellText = cell.toString().length > 30 ? cell.toString().substring(0, 27) + '...' : cell.toString();
+                        this.pdf.text(cellText, this.margin + (i * colWidth) + 2, this.y);
+                    });
+                    this.y += 7;
+                });
+                
+                this.y += 5;
+            }
+
+            checkPageBreak(minSpace = 20) {
+                if (this.y > this.pageHeight - minSpace) {
+                    this.pdf.addPage();
+                    this.y = this.margin;
+                }
+            }
+
+            getRelativeUrl(fullUrl) {
+                try {
+                    const parsed = new URL(fullUrl);
+                    const domainParsed = new URL(this.data.domain);
+                    
+                    if (parsed.origin === domainParsed.origin) {
+                        const path = parsed.pathname + parsed.search + parsed.hash;
+                        return path === '/' ? '/ (Accueil)' : path;
+                    }
+                    return fullUrl;
+                } catch {
+                    return fullUrl;
+                }
+            }
+
+            formatSize(bytes) {
+                if (bytes < 1024) return `${bytes} B`;
+                if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+                return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+            }
+
+            getGlobalStatus() {
+                const percentage = (this.data.pagesWithIssues / this.data.totalPages) * 100;
+                if (percentage < 10) return 'Excellent';
+                if (percentage < 30) return 'Bon';
+                if (percentage < 50) return 'Moyen';
+                return 'Nécessite attention';
+            }
+
+            getTitleStats() {
+                const stats = { good: 0, short: 0, long: 0, missing: 0 };
+                this.data.pages.forEach(page => {
+                    const len = page.titleLen || 0;
+                    if (len === 0) stats.missing++;
+                    else if (len < 30) stats.short++;
+                    else if (len > 65) stats.long++;
+                    else stats.good++;
+                });
+                return stats;
+            }
+
+            getMetaStats() {
+                const stats = { good: 0, short: 0, long: 0, missing: 0 };
+                this.data.pages.forEach(page => {
+                    const len = page.metaDescLen || 0;
+                    if (len === 0) stats.missing++;
+                    else if (len < 120) stats.short++;
+                    else if (len > 160) stats.long++;
+                    else stats.good++;
+                });
+                return stats;
+            }
+
+            getTitleStatus(len) {
+                if (!len || len === 0) return '✗';
+                if (len >= 30 && len <= 65) return '✓';
+                return '⚠';
+            }
+
+            getMetaStatus(len) {
+                if (!len || len === 0) return '✗';
+                if (len >= 120 && len <= 160) return '✓';
+                return '⚠';
+            }
+
+            getH1Status(count) {
+                if (count === 1) return '✓';
+                if (count === 0) return '✗';
+                return '⚠';
+            }
+
+            getImpactLevel(count, total) {
+                const percentage = (count / total) * 100;
+                if (percentage > 50) return 'Critique';
+                if (percentage > 20) return 'Élevé';
+                if (percentage > 5) return 'Moyen';
+                return 'Faible';
+            }
+        }
+
+        // Charger l'historique
+        async function loadHistory() {
+            const historyContent = document.getElementById('historyContent');
+            
+            // Charger l'historique depuis les fichiers Python
+            await loadAnalysisHistory();
+            
+            if (analysisHistory.length === 0) {
+                historyContent.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucune analyse dans l'historique</h5>
+                        <p class="text-muted">Utilisez la commande Python pour générer des analyses :</p>
+                        <div class="bg-dark text-light p-3 rounded mb-3">
+                            <code>python3 run_audit.py https://example.com --web-output</code>
+                        </div>
+                        <button class="btn btn-primary" onclick="showSection('home')">
+                            <i class="fas fa-plus me-2"></i>Démarrer une analyse
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '<div class="table-responsive"><table class="table table-hover"><thead class="table-light"><tr><th>Domaine</th><th>Date</th><th>Pages</th><th>Problèmes</th><th>Statut</th><th>Actions</th></tr></thead><tbody>';
+            
+            analysisHistory.forEach((analysis, index) => {
+                const date = new Date(analysis.date).toLocaleString('fr-FR');
+                
+                html += `
+                    <tr>
+                        <td>
+                            <div><strong>${analysis.domain}</strong></div>
+                            <small class="text-muted">${analysis.id}</small>
+                        </td>
+                        <td><small>${date}</small></td>
+                        <td>${analysis.summary.total_pages}</td>
+                        <td>${analysis.summary.pages_with_issues}</td>
+                        <td>
+                            <span class="badge bg-success">
+                                <i class="fas fa-check me-1"></i>Terminé
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-1" onclick="viewHistoryResults('${analysis.id}')">
+                                <i class="fas fa-eye me-1"></i>Voir
+                            </button>
+                            <button class="btn btn-sm btn-outline-info me-1" onclick="showHistorySummary(${index})">
+                                <i class="fas fa-info me-1"></i>Résumé
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table></div>';
+            historyContent.innerHTML = html;
+        }
+
+        // Voir les résultats de l'historique
+        function viewHistoryResults(analysisId) {
+            // Pour voir une analyse de l'historique, on charge la dernière analyse
+            // (dans une vraie application, on chargerait l'analyse spécifique par ID)
+            showToast('Chargement de l\'analyse...', 'info');
+            loadLatestAnalysis();
+        }
+
+        // Afficher le résumé d'une analyse de l'historique
+        function showHistorySummary(index) {
+            const analysis = analysisHistory[index];
+            const date = new Date(analysis.date).toLocaleString('fr-FR');
+            
+            const summary = `
+                <div class="history-summary">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <strong>Domaine :</strong> ${analysis.domain}<br>
+                            <strong>Date :</strong> ${date}<br>
+                            <strong>ID :</strong> <code>${analysis.id}</code>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Pages analysées :</strong> ${analysis.summary.total_pages}<br>
+                            <strong>Pages avec problèmes :</strong> ${analysis.summary.pages_with_issues}<br>
+                            <strong>Total des problèmes :</strong> ${analysis.summary.total_issues}
+                        </div>
+                    </div>
+
+                    ${analysis.summary.top_issues.length > 0 ? `
+                        <div class="mb-3">
+                            <strong>Top des problèmes :</strong>
+                            <ul class="mt-2">
+                                ${analysis.summary.top_issues.slice(0, 5).map(([issue, count]) => `
+                                    <li>${issue} <span class="badge bg-danger">${count}</span></li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Pour voir les détails complets, cliquez sur "Voir" dans le tableau de l'historique.
+                    </div>
+                </div>
+            `;
+            
+            showModal('Résumé de l\'analyse', summary);
+        }
+
+        // Supprimer un élément de l'historique
+        function deleteHistoryItem(index) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette analyse ?')) {
+                analysisHistory.splice(index, 1);
+                localStorage.setItem('seoAuditHistory', JSON.stringify(analysisHistory));
+                loadHistory();
+                showToast('Analyse supprimée', 'info');
+            }
+        }
+
+        // Afficher un toast
+        function showToast(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container');
+            const toastId = 'toast-' + Date.now();
+            
+            const bgClass = {
+                success: 'bg-success',
+                danger: 'bg-danger',
+                warning: 'bg-warning',
+                info: 'bg-info'
+            }[type] || 'bg-info';
+            
+            const iconClass = {
+                success: 'check-circle',
+                danger: 'exclamation-triangle',
+                warning: 'exclamation-circle',
+                info: 'info-circle'
+            }[type] || 'info-circle';
+            
+            const toastHtml = `
+                <div id="${toastId}" class="toast align-items-center text-white ${bgClass}" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas fa-${iconClass} me-2"></i>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+                                data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+            
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
+            toast.show();
+            
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+
+        // Afficher une modal
+        function showModal(title, content) {
+            // Créer la modal si elle n'existe pas
+            let modal = document.getElementById('dynamicModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'dynamicModal';
+                modal.className = 'modal fade';
+                modal.innerHTML = `
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalTitle"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body" id="modalContent"></div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalContent').innerHTML = content;
+            
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+        }
+
+        // Initialisation au chargement
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Détecter le mode serveur au chargement
+            isServerMode = await detectServerMode();
+            updateModeDisplay();
+            
+            // Validation de l'URL en temps réel
+            document.getElementById('domain').addEventListener('input', function(e) {
+                const url = e.target.value;
+                const submitBtn = document.getElementById('submitBtn');
+                
+                if (url && !url.match(/^https?:\/\/.+/)) {
+                    e.target.classList.add('is-invalid');
+                    submitBtn.disabled = true;
+                } else {
+                    e.target.classList.remove('is-invalid');
+                    submitBtn.disabled = false;
+                }
+            });
+        });
+
+        // Mettre à jour l'affichage selon le mode détecté
+        function updateModeDisplay() {
+            const serverAlert = document.getElementById('serverModeAlert');
+            const staticAlert = document.getElementById('staticModeAlert');
+            
+            if (isServerMode) {
+                serverAlert.style.display = 'block';
+                staticAlert.style.display = 'none';
+            } else {
+                serverAlert.style.display = 'none';
+                staticAlert.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

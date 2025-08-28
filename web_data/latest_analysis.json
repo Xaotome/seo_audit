@@ -1,0 +1,1665 @@
+{
+  "metadata": {
+    "domain": "https://www.appel-innovation.be",
+    "analysis_date": "2025-08-27T22:41:48.315862",
+    "total_pages": 20,
+    "analysis_id": "audit_1756327308"
+  },
+  "summary": {
+    "total_pages": 20,
+    "pages_with_issues": 20,
+    "avg_response_time": 73.35,
+    "total_issues": 54,
+    "top_issues": [
+      [
+        "URL canonique manquante",
+        17
+      ],
+      [
+        "Meta description manquante",
+        10
+      ],
+      [
+        "Meta description trop longue (> 160 caractères)",
+        5
+      ],
+      [
+        "Titre trop long (> 65 caractères)",
+        5
+      ],
+      [
+        "Titre trop court (< 10 caractères)",
+        3
+      ],
+      [
+        "Nombre de mots insuffisant (< 150 mots)",
+        3
+      ],
+      [
+        "URL canonique externe",
+        2
+      ],
+      [
+        "1 images sans texte alt",
+        2
+      ],
+      [
+        "Balises H1 multiples (2)",
+        2
+      ],
+      [
+        "Erreur d'analyse: 'NoneType' object has no attribute 'strip'",
+        1
+      ]
+    ],
+    "status_codes": {
+      "200": 20
+    }
+  },
+  "pages": [
+    {
+      "url": "https://www.appel-innovation.be/page/jobs.html",
+      "status": 200,
+      "responseTime": 299,
+      "title": "Jobs",
+      "titleLen": 4,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 28,
+      "linksExternal": 6,
+      "wordCount": 143,
+      "issues": [
+        "Titre trop court (< 10 caractères)",
+        "Meta description manquante",
+        "URL canonique manquante",
+        "Nombre de mots insuffisant (< 150 mots)"
+      ],
+      "issuesCount": 4,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/jobs.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 31682,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:48 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:48.315862",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Jobs",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Découvrez les différents postes disponibles",
+          "position": 1
+        },
+        {
+          "level": 3,
+          "text": "///A REMPLACER> #NOM-FONCTION# à #ville#",
+          "position": 2
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 4
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/lorem-ipsum-dolor-sit-amet-consectetur-adipiscing-elit.html",
+      "status": 200,
+      "responseTime": 53,
+      "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+      "titleLen": 55,
+      "metaDesc": "Pellentesque nisi est, sollicitudin quis arcu id, eleifend fermentum erat. Aenean gravida dui quis dictum dignissim. Praesent sollicitudin vel lacus ac consequat. Curabitur vestibulum ligula id risus efficitur auctor.",
+      "metaDescLen": 217,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 29,
+      "linksExternal": 6,
+      "wordCount": 463,
+      "issues": [
+        "Meta description trop longue (> 160 caractères)",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/lorem-ipsum-dolor-sit-amet-consectetur-adipiscing-elit.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 40969,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:49 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:49.316386",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Nam at tortor in tellus",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "Praesent porttitor nulla vitae posuere",
+          "position": 2
+        },
+        {
+          "level": 3,
+          "text": "Avis des internautes",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 5
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/lancement-de-notre-nouveau-site.html",
+      "status": 200,
+      "responseTime": 60,
+      "title": "Lancement de notre nouveau site Internet",
+      "titleLen": 40,
+      "metaDesc": "Notre nouveau site Internet est lanc&eacute;. Il est optimis&eacute; pour &ecirc;tre le plus accessible aux internautes avec un focus pour &ecirc;tre le plus conforme &agrave; la l&eacute;gislation au moment du lancement du site. Ce site Internet a &eacute;t&eacute; r&eacute;alis&eacute; par E-net Business, une agence en Digital Marketing situ&eacute;e &agrave; Floreffe (Namur).",
+      "metaDescLen": 381,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 29,
+      "linksExternal": 8,
+      "wordCount": 793,
+      "issues": [
+        "Meta description trop longue (> 160 caractères)",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/lancement-de-notre-nouveau-site.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 54695,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:50 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:50.316812",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Lancement de notre nouveau site Internet",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Focus sur la conformité législative",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "Quelques mots sur notre agence en Digital Marketing",
+          "position": 2
+        },
+        {
+          "level": 3,
+          "text": "Avis des internautes",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 5
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/notre-blog.html",
+      "status": 200,
+      "responseTime": 57,
+      "title": "Notre blog",
+      "titleLen": 10,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 34,
+      "linksExternal": 6,
+      "wordCount": 194,
+      "issues": [
+        "Meta description manquante",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/notre-blog.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 34840,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:51 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:51.316919",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Notre blog",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Découvrez les différents articles de notre blog",
+          "position": 1
+        },
+        {
+          "level": 3,
+          "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+          "position": 2
+        },
+        {
+          "level": 3,
+          "text": "Comment générer des visiteurs en Inbound Marketing ?",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Lancement de notre nouveau site Internet",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 5
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 6
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/categorie/notre-entreprise.html",
+      "status": 200,
+      "responseTime": 57,
+      "title": "Notre entreprise",
+      "titleLen": 16,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 0,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 0,
+      "linksExternal": 0,
+      "wordCount": 0,
+      "issues": [
+        "Erreur d'analyse: 'NoneType' object has no attribute 'strip'"
+      ],
+      "issuesCount": 1,
+      "redirectChain": [
+        "https://www.appel-innovation.be/categorie/notre-entreprise.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 0,
+      "htmlSize": 33758,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:52 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:52.317177",
+      "headingsStructure": [],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/methode-pme-association-entreprise-inbound-marketing.html",
+      "status": 200,
+      "responseTime": 56,
+      "title": "Méthodologie pour attirer des visiteurs en Inbound Marketing",
+      "titleLen": 60,
+      "metaDesc": "Dans cet article, des astuces pour attirer des visiteurs et les transformer en prospects sur votre site web.",
+      "metaDescLen": 108,
+      "h1Count": 1,
+      "canonical": "https://www.e-net-b.be/page/comment-generer-des-visiteurs-en-inbound-marketing.html",
+      "canonicalOk": true,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 1,
+      "linksInternal": 29,
+      "linksExternal": 7,
+      "wordCount": 964,
+      "issues": [
+        "URL canonique externe",
+        "1 images sans texte alt"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/methode-pme-association-entreprise-inbound-marketing.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 46070,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:53 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:53.317591",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Comment générer des visiteurs en Inbound Marketing ?",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Attirer des visiteurs rapidement vers son site : facile",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "Devenir un média incontournable qui attire automatiquement les prospects : la recette de l’inbound m",
+          "position": 2
+        },
+        {
+          "level": 2,
+          "text": "Astuces pour commencer à appliquer les principes d’Inbound Marketing autour de votre site",
+          "position": 3
+        },
+        {
+          "level": 2,
+          "text": "Ne jamais hésiter à se faire accompagner",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "1. Alimentez votre site en contenu riche",
+          "position": 5
+        },
+        {
+          "level": 3,
+          "text": "2. Proposez des articles de conseils, trucs et astuces",
+          "position": 6
+        },
+        {
+          "level": 3,
+          "text": "3. Votre site est le cœur de la stratégie : faites-la rayonner sur les réseaux sociaux",
+          "position": 7
+        },
+        {
+          "level": 3,
+          "text": "Avis des internautes",
+          "position": 8
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 9
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 10
+        }
+      ],
+      "headingsHierarchyIssues": [
+        "3 titres trop longs (>70 caractères)"
+      ]
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/nos-partenaires-web.html",
+      "status": 200,
+      "responseTime": 48,
+      "title": "Nos partenaires web",
+      "titleLen": 19,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 24,
+      "linksExternal": 6,
+      "wordCount": 66,
+      "issues": [
+        "Meta description manquante",
+        "URL canonique manquante",
+        "Nombre de mots insuffisant (< 150 mots)"
+      ],
+      "issuesCount": 3,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/nos-partenaires-web.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 29287,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:54 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:54.318176",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Nos partenaires web",
+          "position": 0
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 1
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 2
+        }
+      ],
+      "headingsHierarchyIssues": [
+        "Saut de niveau de titre: H1 → H3 (H2 manquant)"
+      ]
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/dimanche-21-septembre-2025.html",
+      "status": 200,
+      "responseTime": 76,
+      "title": "L’Appel à l’Innovation – Journée festive du 21 septembre 2025 à Namur | e-net.",
+      "titleLen": 78,
+      "metaDesc": "Rejoignez-nous au cœur de Namur pour une journée festive, humaine et technologique dans le cadre des Fêtes de Wallonie 2025. Animations enfants, spectacles, robotique, IA et concerts gratuits — une expérience inoubliable pour petits et grands.",
+      "metaDescLen": 243,
+      "h1Count": 1,
+      "canonical": "https://www.appel-innovation.be/evenements/dimanche-21-septembre-2025",
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 5,
+      "linksInternal": 25,
+      "linksExternal": 7,
+      "wordCount": 570,
+      "issues": [
+        "Titre trop long (> 65 caractères)",
+        "Meta description trop longue (> 160 caractères)",
+        "L'URL canonique retourne 404",
+        "URL canonique externe",
+        "5 images sans texte alt"
+      ],
+      "issuesCount": 5,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/dimanche-21-septembre-2025.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 46386,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:55 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:55.318207",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Dimanche 21 septembre 2025",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Programme détaillé",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "Nos partenaires",
+          "position": 2
+        },
+        {
+          "level": 3,
+          "text": "13h00 – 16h15 Animations enfants & familles",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "16h30 – 17h30 L’innovation sur scène",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "18h00 – 19h15 Concert live – Corentin Simon",
+          "position": 5
+        },
+        {
+          "level": 3,
+          "text": "20h20 – 22h00 Concert \"FAN\" - Tribute Pascal Obispo",
+          "position": 6
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 7
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 8
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/a-propos-des-cookies.html",
+      "status": 200,
+      "responseTime": 44,
+      "title": "A propos des cookies utilisés sur notre site Internet et de leur gestion",
+      "titleLen": 72,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 2,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": "noindex",
+      "noindex": true,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 24,
+      "linksExternal": 6,
+      "wordCount": 450,
+      "issues": [
+        "Titre trop long (> 65 caractères)",
+        "Meta description manquante",
+        "Balises H1 multiples (2)",
+        "URL canonique manquante",
+        "Directive noindex trouvée"
+      ],
+      "issuesCount": 5,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/a-propos-des-cookies.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 32202,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:56 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:56.318446",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "A propos des cookies utilisés sur notre site Internet et de leur gestion",
+          "position": 0
+        },
+        {
+          "level": 1,
+          "text": "A propos des cookies utilisés sur notre site Internet et de leur gestion",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "Généralités",
+          "position": 2
+        },
+        {
+          "level": 2,
+          "text": "Différents types de cookies",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Par cookies fonctionnels, on entend :",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Par cookies optimisés, on entend :",
+          "position": 5
+        },
+        {
+          "level": 3,
+          "text": "Par cookies personnalisés, on entend :",
+          "position": 6
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 7
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 8
+        }
+      ],
+      "headingsHierarchyIssues": [
+        "Plusieurs titres H1 trouvés (2)",
+        "2 titres trop longs (>70 caractères)"
+      ]
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/nom-fonction-a-ville.html",
+      "status": 200,
+      "responseTime": 71,
+      "title": "///A REMPLACER> #NOM-FONCTION# à #ville#",
+      "titleLen": 40,
+      "metaDesc": "R&eacute;alisez une accroche de 2/3 ligne pour rappeler l&rsquo;identit&eacute; de l&rsquo;entreprise, son secteur d&rsquo;activit&eacute;, les services ou produits qu&rsquo;elle fournit, etc. D&eacute;crivez ensuite la fonction du poste vacant, quelles sont les attentes de l&rsquo;entreprise, le type de contrat offert.",
+      "metaDescLen": 321,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 26,
+      "linksExternal": 6,
+      "wordCount": 271,
+      "issues": [
+        "Meta description trop longue (> 160 caractères)",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/nom-fonction-a-ville.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 39749,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:57 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:57.318540",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "///A REMPLACER> #NOM-FONCTION# à #ville#",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "///A REMPLACER> La fonction de #NOM-FONCTION#",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "///A REMPLACER> Les pré-requis pour #NOM-FONCTION#",
+          "position": 2
+        },
+        {
+          "level": 2,
+          "text": "Ce que nous offrons:",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 5
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/e-net-votre-agence-de-transformation-strategique-et-digitale.html",
+      "status": 200,
+      "responseTime": 51,
+      "title": "e-net.",
+      "titleLen": 6,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 1,
+      "linksInternal": 24,
+      "linksExternal": 6,
+      "wordCount": 280,
+      "issues": [
+        "Titre trop court (< 10 caractères)",
+        "Meta description manquante",
+        "URL canonique manquante",
+        "1 images sans texte alt"
+      ],
+      "issuesCount": 4,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/e-net-votre-agence-de-transformation-strategique-et-digitale.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 32562,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:58 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:58.319553",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "e-net.",
+          "position": 0
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 1
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 2
+        }
+      ],
+      "headingsHierarchyIssues": [
+        "Saut de niveau de titre: H1 → H3 (H2 manquant)"
+      ]
+    },
+    {
+      "url": "https://www.appel-innovation.be/categorie/blog.html",
+      "status": 200,
+      "responseTime": 78,
+      "title": "Notre blog",
+      "titleLen": 10,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 34,
+      "linksExternal": 6,
+      "wordCount": 194,
+      "issues": [
+        "Meta description manquante",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/categorie/blog.html",
+        "https://www.appel-innovation.be/page/notre-blog.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 34840,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:41:59 GMT"
+      },
+      "crawledAt": "2025-08-27T22:41:59.319766",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Notre blog",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Découvrez les différents articles de notre blog",
+          "position": 1
+        },
+        {
+          "level": 3,
+          "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+          "position": 2
+        },
+        {
+          "level": 3,
+          "text": "Comment générer des visiteurs en Inbound Marketing ?",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Lancement de notre nouveau site Internet",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 5
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 6
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/categorie/jobs.html",
+      "status": 200,
+      "responseTime": 75,
+      "title": "Jobs",
+      "titleLen": 4,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 28,
+      "linksExternal": 6,
+      "wordCount": 143,
+      "issues": [
+        "Titre trop court (< 10 caractères)",
+        "Meta description manquante",
+        "URL canonique manquante",
+        "Nombre de mots insuffisant (< 150 mots)"
+      ],
+      "issuesCount": 4,
+      "redirectChain": [
+        "https://www.appel-innovation.be/categorie/jobs.html",
+        "https://www.appel-innovation.be/page/jobs.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 31682,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:42:00 GMT"
+      },
+      "crawledAt": "2025-08-27T22:42:00.320361",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Jobs",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Découvrez les différents postes disponibles",
+          "position": 1
+        },
+        {
+          "level": 3,
+          "text": "///A REMPLACER> #NOM-FONCTION# à #ville#",
+          "position": 2
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 4
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/wallonie-lab.html",
+      "status": 200,
+      "responseTime": 61,
+      "title": "e-net. Wallonie lab – Le 1er laboratoire stratégique et digital de Wallonie",
+      "titleLen": 75,
+      "metaDesc": "Le e-net. Wallonie lab réunit des leaders publics et privés pour faire de la Wallonie une référence européenne en innovation numérique, artistique et sociétale d’ici 2035.",
+      "metaDescLen": 171,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 24,
+      "linksExternal": 6,
+      "wordCount": 500,
+      "issues": [
+        "Titre trop long (> 65 caractères)",
+        "Meta description trop longue (> 160 caractères)",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 3,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/wallonie-lab.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 39677,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:42:01 GMT"
+      },
+      "crawledAt": "2025-08-27T22:42:01.320400",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "e-net. wallonie lab",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Le premier laboratoire stratégique et digital en Wallonie.",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "* Précision importante",
+          "position": 2
+        },
+        {
+          "level": 3,
+          "text": "Membres du e-net. Wallonie lab",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Denis Mathen",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Annick Castiaux",
+          "position": 5
+        },
+        {
+          "level": 3,
+          "text": "Virginie Demilier",
+          "position": 6
+        },
+        {
+          "level": 3,
+          "text": "Caroline Cleppert",
+          "position": 7
+        },
+        {
+          "level": 3,
+          "text": "Xavier Goebels",
+          "position": 8
+        },
+        {
+          "level": 3,
+          "text": "Jean-Noël Tilman",
+          "position": 9
+        },
+        {
+          "level": 3,
+          "text": "Paul de Sauvage",
+          "position": 10
+        },
+        {
+          "level": 3,
+          "text": "Nicolas Pourbaix",
+          "position": 11
+        },
+        {
+          "level": 3,
+          "text": "Mission",
+          "position": 12
+        },
+        {
+          "level": 3,
+          "text": "Vision",
+          "position": 13
+        },
+        {
+          "level": 3,
+          "text": "Valeurs",
+          "position": 14
+        },
+        {
+          "level": 3,
+          "text": "Une synergie inédite pour la Wallonie",
+          "position": 15
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 16
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 17
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/contact.html",
+      "status": 200,
+      "responseTime": 74,
+      "title": "Contactez-nous",
+      "titleLen": 14,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 28,
+      "linksExternal": 6,
+      "wordCount": 291,
+      "issues": [
+        "Meta description manquante",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/contact.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 50406,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:42:02 GMT"
+      },
+      "crawledAt": "2025-08-27T22:42:02.320670",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Contactez-nous",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Formulaire de contact",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "e-net.",
+          "position": 2
+        },
+        {
+          "level": 2,
+          "text": "Informations légales",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Namur",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 5
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 6
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/page-de-reassurance.html",
+      "status": 200,
+      "responseTime": 52,
+      "title": "Mission, vision & valeurs",
+      "titleLen": 25,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 26,
+      "linksExternal": 6,
+      "wordCount": 650,
+      "issues": [
+        "Meta description manquante",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/page-de-reassurance.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 36609,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:42:03 GMT"
+      },
+      "crawledAt": "2025-08-27T22:42:03.321143",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Mission, vision & valeurs",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Notre mission",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "Notre vision",
+          "position": 2
+        },
+        {
+          "level": 2,
+          "text": "Nos valeurs",
+          "position": 3
+        },
+        {
+          "level": 2,
+          "text": "Pourquoi faire appel à notre entreprise ?",
+          "position": 4
+        },
+        {
+          "level": 2,
+          "text": "Prenez contact avec notre équipe",
+          "position": 5
+        },
+        {
+          "level": 3,
+          "text": "Notre promesse commerciale",
+          "position": 6
+        },
+        {
+          "level": 3,
+          "text": "///A REMPLACER> Petite phrase pour décrire votre promesse commerciale",
+          "position": 7
+        },
+        {
+          "level": 3,
+          "text": "Nos atouts",
+          "position": 8
+        },
+        {
+          "level": 3,
+          "text": "///A REMPLACER> Écrivez ici une petite phrase avec votre atout principal",
+          "position": 9
+        },
+        {
+          "level": 3,
+          "text": "Notre philosophie",
+          "position": 10
+        },
+        {
+          "level": 3,
+          "text": "///A REMPLACER> Petite phrase qui décrit votre philosophie",
+          "position": 11
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 12
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 13
+        }
+      ],
+      "headingsHierarchyIssues": [
+        "1 titres trop longs (>70 caractères)"
+      ]
+    },
+    {
+      "url": "https://www.appel-innovation.be/categorie/evenements-appel-a-l-innovation.html",
+      "status": 200,
+      "responseTime": 71,
+      "title": "L’appel à l’innovation : 3 événements pour réinventer la Wallonie | e-net.",
+      "titleLen": 74,
+      "metaDesc": "Dès septembre 2025, trois événements à Namur pour débattre, expérimenter et construire ensemble une Wallonie innovante et durable.",
+      "metaDescLen": 130,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 28,
+      "linksExternal": 6,
+      "wordCount": 415,
+      "issues": [
+        "Titre trop long (> 65 caractères)",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/categorie/evenements-appel-a-l-innovation.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 44624,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:42:04 GMT"
+      },
+      "crawledAt": "2025-08-27T22:42:04.321308",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "Nos événements",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Nos événements",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "Trois temps forts",
+          "position": 2
+        },
+        {
+          "level": 2,
+          "text": "Nos partenaires",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Dimanche 21 septembre 2025",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Mardi 27 janvier 2026",
+          "position": 5
+        },
+        {
+          "level": 3,
+          "text": "Mardi 15 septembre 2026",
+          "position": 6
+        },
+        {
+          "level": 3,
+          "text": "Les 3 grands souffles de l’innovation en Wallonie",
+          "position": 7
+        },
+        {
+          "level": 3,
+          "text": "Dimanche 21 septembre 2025Grand public & familles",
+          "position": 8
+        },
+        {
+          "level": 3,
+          "text": "Mardi 27 janvier 2026Clients, partenaires & collaborateurs",
+          "position": 9
+        },
+        {
+          "level": 3,
+          "text": "Mardi 15 septembre 2026Institutions & écosystèmes publics",
+          "position": 10
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 11
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 12
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/page/references.html",
+      "status": 200,
+      "responseTime": 65,
+      "title": "nos références",
+      "titleLen": 14,
+      "metaDesc": null,
+      "metaDescLen": 0,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 8,
+      "linksInternal": 26,
+      "linksExternal": 6,
+      "wordCount": 212,
+      "issues": [
+        "Meta description manquante",
+        "URL canonique manquante",
+        "8 images sans texte alt"
+      ],
+      "issuesCount": 3,
+      "redirectChain": [
+        "https://www.appel-innovation.be/page/references.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 36026,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:42:05 GMT"
+      },
+      "crawledAt": "2025-08-27T22:42:05.321192",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "nos références",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Quelques exemples de clients",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "Réalisations et/ou chantiers",
+          "position": 2
+        },
+        {
+          "level": 2,
+          "text": "Nos dernières études de cas",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 5
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/",
+      "status": 200,
+      "responseTime": 60,
+      "title": "L’appel à l’innovation : trois événements à Namur pour réinventer la Wallonie | e-net.",
+      "titleLen": 86,
+      "metaDesc": "Dès septembre 2025, trois rendez-vous à Namur pour vivre l’innovation autrement : stratégie, créativité et participation citoyenne pour une Wallonie durable.",
+      "metaDescLen": 157,
+      "h1Count": 1,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 29,
+      "linksExternal": 6,
+      "wordCount": 508,
+      "issues": [
+        "Titre trop long (> 65 caractères)",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 0,
+      "htmlSize": 46555,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:42:06 GMT"
+      },
+      "crawledAt": "2025-08-27T22:42:06.321994",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "l'appel à l'innovation",
+          "position": 0
+        },
+        {
+          "level": 2,
+          "text": "Nos événements",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "Les grands souffles de l’innovation",
+          "position": 2
+        },
+        {
+          "level": 2,
+          "text": "Trois temps forts",
+          "position": 3
+        },
+        {
+          "level": 2,
+          "text": "initiative e-net.",
+          "position": 4
+        },
+        {
+          "level": 2,
+          "text": "Nos partenaires",
+          "position": 5
+        },
+        {
+          "level": 3,
+          "text": "Dimanche 21 septembre 2025",
+          "position": 6
+        },
+        {
+          "level": 3,
+          "text": "Mardi 27 janvier 2026",
+          "position": 7
+        },
+        {
+          "level": 3,
+          "text": "Mardi 15 septembre 2026",
+          "position": 8
+        },
+        {
+          "level": 3,
+          "text": "Dimanche 21 septembre 2025Grand public & familles",
+          "position": 9
+        },
+        {
+          "level": 3,
+          "text": "Mardi 27 janvier 2026Clients, partenaires & collaborateurs",
+          "position": 10
+        },
+        {
+          "level": 3,
+          "text": "Mardi 15 septembre 2026Institutions & écosystèmes publics",
+          "position": 11
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 12
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 13
+        }
+      ],
+      "headingsHierarchyIssues": []
+    },
+    {
+      "url": "https://www.appel-innovation.be/categorie/partenaires-appel-innovation.html",
+      "status": 200,
+      "responseTime": 59,
+      "title": "Partenaires de l’appel à l’innovation - Ensemble pour la Wallonie",
+      "titleLen": 65,
+      "metaDesc": "Découvrez les partenaires qui financent et soutiennent à 100 % l’appel à l’innovation aux côtés de e-net",
+      "metaDescLen": 104,
+      "h1Count": 2,
+      "canonical": null,
+      "canonicalOk": false,
+      "robotsMeta": null,
+      "noindex": false,
+      "nofollow": false,
+      "imgNoAlt": 0,
+      "linksInternal": 24,
+      "linksExternal": 6,
+      "wordCount": 212,
+      "issues": [
+        "Balises H1 multiples (2)",
+        "URL canonique manquante"
+      ],
+      "issuesCount": 2,
+      "redirectChain": [
+        "https://www.appel-innovation.be/categorie/partenaires-appel-innovation.html"
+      ],
+      "hreflangCount": 0,
+      "structuredDataCount": 1,
+      "htmlSize": 36407,
+      "isCompressed": true,
+      "cacheHeaders": {
+        "Expires": "Thu, 19 Nov 1981 08:52:00 GMT",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Last-Modified": "Wed, 27 Aug 2025 20:42:07 GMT"
+      },
+      "crawledAt": "2025-08-27T22:42:07.322205",
+      "headingsStructure": [
+        {
+          "level": 1,
+          "text": "nos partenaires",
+          "position": 0
+        },
+        {
+          "level": 1,
+          "text": "nos partenaires Une alliance de talents et d’engagements au service de l’innovation responsable",
+          "position": 1
+        },
+        {
+          "level": 2,
+          "text": "Un engagement collectif",
+          "position": 2
+        },
+        {
+          "level": 3,
+          "text": "Précision importante",
+          "position": 3
+        },
+        {
+          "level": 3,
+          "text": "Menu",
+          "position": 4
+        },
+        {
+          "level": 3,
+          "text": "Rejoignez-nous",
+          "position": 5
+        }
+      ],
+      "headingsHierarchyIssues": [
+        "Plusieurs titres H1 trouvés (2)",
+        "1 titres trop longs (>70 caractères)"
+      ]
+    }
+  ]
+}

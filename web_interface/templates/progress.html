@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}Analyse en cours - SEO Audit Tool{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <!-- En-tête -->
+        <div class="text-center mb-4">
+            <h2 class="text-primary">
+                <i class="fas fa-cog fa-spin me-2"></i>Analyse SEO en cours
+            </h2>
+            <p class="text-muted">Veuillez patienter pendant que nous analysons votre site...</p>
+        </div>
+
+        <!-- Carte de progression -->
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>Progression de l'analyse
+                </h4>
+            </div>
+            
+            <div class="card-body">
+                <!-- Barre de progression -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span><strong>Progression globale</strong></span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress progress-lg">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                             id="progressBar" 
+                             style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Informations détaillées -->
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h5 class="text-primary mb-0" id="pagesAnalyzed">0</h5>
+                            <small class="text-muted">Pages analysées</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h5 class="text-info mb-0" id="totalPages">?</h5>
+                            <small class="text-muted">Pages total</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h5 class="text-success mb-0" id="timeElapsed">0s</h5>
+                            <small class="text-muted">Temps écoulé</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded p-3">
+                            <h5 class="text-warning mb-0" id="timeRemaining">?</h5>
+                            <small class="text-muted">Temps restant</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page actuellement analysée -->
+                <div class="mt-4">
+                    <h6><i class="fas fa-globe me-2"></i>Page en cours d'analyse :</h6>
+                    <div class="bg-light p-3 rounded">
+                        <code id="currentUrl" class="text-break">Initialisation...</code>
+                    </div>
+                </div>
+
+                <!-- Statut de connexion -->
+                <div class="mt-3">
+                    <span id="connectionStatus" class="badge bg-secondary">
+                        <i class="fas fa-circle me-1"></i>Connexion...
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="text-center mt-4">
+            <button class="btn btn-outline-danger" onclick="confirmStop()">
+                <i class="fas fa-stop me-2"></i>Arrêter l'analyse
+            </button>
+            <a href="{{ url_for('analysis_history') }}" class="btn btn-outline-primary ms-2">
+                <i class="fas fa-history me-2"></i>Voir l'historique
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation d'arrêt -->
+<div class="modal fade" id="stopConfirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmer l'arrêt</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir arrêter l'analyse en cours ?</p>
+                <p class="text-muted">Les données déjà collectées seront perdues.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" onclick="stopAnalysis()">
+                    <i class="fas fa-stop me-2"></i>Arrêter
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const analysisId = "{{ analysis_id }}";
+let socket;
+
+// Initialiser Socket.IO
+function initSocket() {
+    socket = io();
+    
+    socket.on('connect', function() {
+        console.log('Connecté au serveur');
+        updateConnectionStatus('connected');
+        socket.emit('join_analysis', {analysis_id: analysisId});
+    });
+    
+    socket.on('disconnect', function() {
+        console.log('Déconnecté du serveur');
+        updateConnectionStatus('disconnected');
+    });
+    
+    socket.on('progress_update', function(data) {
+        if (data.analysis_id === analysisId) {
+            updateProgress(data);
+        }
+    });
+    
+    socket.on('analysis_complete', function(data) {
+        if (data.analysis_id === analysisId) {
+            analysisCompleted(data);
+        }
+    });
+    
+    socket.on('analysis_error', function(data) {
+        if (data.analysis_id === analysisId) {
+            analysisError(data);
+        }
+    });
+    
+    socket.on('analysis_status', function(data) {
+        if (data.analysis_id === analysisId && data.status === 'completed') {
+            window.location.href = `/results/${analysisId}`;
+        }
+    });
+}
+
+// Mettre à jour la progression
+function updateProgress(data) {
+    const percent = Math.round(data.progress);
+    
+    document.getElementById('progressBar').style.width = percent + '%';
+    document.getElementById('progressPercent').textContent = percent + '%';
+    document.getElementById('pagesAnalyzed').textContent = data.current;
+    document.getElementById('totalPages').textContent = data.total;
+    document.getElementById('timeElapsed').textContent = formatTime(data.elapsed);
+    document.getElementById('timeRemaining').textContent = formatTime(data.eta);
+    document.getElementById('currentUrl').textContent = data.url;
+}
+
+// Analyse terminée
+function analysisCompleted(data) {
+    document.getElementById('progressBar').style.width = '100%';
+    document.getElementById('progressPercent').textContent = '100%';
+    
+    // Rediriger vers les résultats après un court délai
+    setTimeout(() => {
+        window.location.href = `/results/${analysisId}`;
+    }, 2000);
+    
+    // Afficher message de succès
+    showAlert('success', `Analyse terminée ! ${data.results_count} pages analysées. Redirection en cours...`);
+}
+
+// Erreur d'analyse
+function analysisError(data) {
+    showAlert('danger', `Erreur lors de l'analyse : ${data.error}`);
+    
+    // Désactiver les mises à jour
+    if (socket) {
+        socket.disconnect();
+    }
+}
+
+// Mettre à jour le statut de connexion
+function updateConnectionStatus(status) {
+    const statusElement = document.getElementById('connectionStatus');
+    
+    if (status === 'connected') {
+        statusElement.className = 'badge bg-success';
+        statusElement.innerHTML = '<i class="fas fa-circle me-1"></i>Connecté';
+    } else {
+        statusElement.className = 'badge bg-danger';
+        statusElement.innerHTML = '<i class="fas fa-circle me-1"></i>Déconnecté';
+    }
+}
+
+// Formater le temps
+function formatTime(seconds) {
+    if (!seconds || seconds < 0) return '?';
+    
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    
+    if (minutes > 0) {
+        return `${minutes}m ${secs}s`;
+    }
+    return `${secs}s`;
+}
+
+// Afficher une alerte
+function showAlert(type, message) {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    document.querySelector('.container.my-4').insertAdjacentHTML('afterbegin', alertHtml);
+}
+
+// Confirmer l'arrêt
+function confirmStop() {
+    const modal = new bootstrap.Modal(document.getElementById('stopConfirmModal'));
+    modal.show();
+}
+
+// Arrêter l'analyse
+function stopAnalysis() {
+    window.location.href = '/';
+}
+
+// Initialiser au chargement de la page
+document.addEventListener('DOMContentLoaded', function() {
+    initSocket();
+    
+    // Vérifier périodiquement le statut
+    setInterval(() => {
+        fetch(`/api/status/${analysisId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'completed') {
+                    window.location.href = `/results/${analysisId}`;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de la vérification du statut:', error);
+            });
+    }, 5000);
+});
+</script>
+{% endblock %}

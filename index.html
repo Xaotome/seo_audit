@@ -1,0 +1,2912 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Audit Tool - Interface Web Autonome</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF pour l'export PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #0dcaf0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            border-radius: 12px 12px 0 0 !important;
+            border-bottom: none;
+            font-weight: 600;
+        }
+
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+        }
+
+        .progress {
+            height: 20px;
+            border-radius: 8px;
+        }
+
+        .progress-bar {
+            border-radius: 8px;
+        }
+
+        .badge {
+            border-radius: 6px;
+            font-weight: 500;
+            padding: 6px 12px;
+        }
+
+        .table {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+
+        .stats-card h4 {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .issue-item {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-left: 4px solid var(--warning-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .issue-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .nav-tabs .nav-link {
+            border-radius: 8px 8px 0 0;
+            border: none;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .toast {
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            
+            .card {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-search me-2"></i>SEO Audit Tool
+            </a>
+            
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#" onclick="showSection('home')">
+                    <i class="fas fa-home me-1"></i>Accueil
+                </a>
+                <a class="nav-link" href="#" onclick="showSection('history')">
+                    <i class="fas fa-history me-1"></i>Historique
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Section Accueil -->
+        <div id="home" class="section active">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="text-center mb-5">
+                        <h1 class="display-4 text-primary mb-3">
+                            <i class="fas fa-search me-3"></i>SEO Audit Tool
+                        </h1>
+                        <p class="lead text-muted">
+                            Analysez et optimisez les performances SEO de votre site web en temps réel
+                        </p>
+                    </div>
+
+                    <div class="card shadow-lg">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">
+                                <i class="fas fa-globe me-2"></i>Nouvelle analyse SEO
+                            </h4>
+                        </div>
+                        
+                        <div class="card-body">
+                            <form id="analysisForm" onsubmit="startAnalysis(event)">
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <label for="domain" class="form-label fw-bold">
+                                            <i class="fas fa-link me-2"></i>URL du site à analyser
+                                        </label>
+                                        <input type="url" class="form-control" id="domain" 
+                                               placeholder="https://example.com" required>
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Entrez l'URL complète de votre site web
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="maxPages" class="form-label fw-bold">
+                                            <i class="fas fa-list me-2"></i>Pages max
+                                        </label>
+                                        <select class="form-select" id="maxPages">
+                                            <option value="5">5 pages</option>
+                                            <option value="10" selected>10 pages</option>
+                                            <option value="25">25 pages</option>
+                                            <option value="50">50 pages</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert alert-success mt-3" role="alert">
+                                    <i class="fas fa-server me-2"></i>
+                                    <strong>Proxy local:</strong> Cette application utilise un serveur proxy local pour un scraping fiable et rapide.
+                                    <br><small class="mt-1 d-block text-muted">
+                                        <strong>1.</strong> Lancez d'abord: <code>node proxy-server.js</code><br>
+                                        <strong>2.</strong> Puis ouvrez: <code>http://localhost:3001/</code>
+                                    </small>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
+                                            <i class="fas fa-play me-2"></i>Démarrer l'analyse SEO
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Progression -->
+        <div id="progress" class="section">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center mb-4">
+                        <h2 class="text-primary">
+                            <i class="fas fa-cog fa-spin me-2"></i>Analyse SEO en cours
+                        </h2>
+                        <p class="text-muted">Analyse de votre site web...</p>
+                    </div>
+
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold">Progression</span>
+                                    <span id="progressPercent" class="text-primary fw-bold">0%</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-primary" id="progressBar" role="progressbar" 
+                                         style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                <p class="mb-1 fw-bold">Page actuelle :</p>
+                                <p id="currentUrl" class="text-muted mb-3">Initialisation...</p>
+                                
+                                <div class="row text-center">
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <h4 id="pagesProcessed">0</h4>
+                                            <small class="text-muted">Pages analysées</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <h4 id="pagesDiscovered">0</h4>
+                                            <small class="text-muted">Pages découvertes</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <h4 id="totalPages">-</h4>
+                                            <small class="text-muted">Pages cibles</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="stats-card">
+                                            <h4 id="issuesFound">0</h4>
+                                            <small class="text-muted">Problèmes trouvés</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <h6 class="text-muted mb-2"><i class="fas fa-search me-2"></i>Méthodes de découverte :</h6>
+                                    <div class="row text-center">
+                                        <div class="col-md-3">
+                                            <small class="text-success"><i class="fas fa-map me-1"></i>Sitemap: <span id="sitemapCount">0</span></small>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-info"><i class="fas fa-robot me-1"></i>Robots.txt: <span id="robotsCount">0</span></small>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-warning"><i class="fas fa-link me-1"></i>Liens: <span id="linksCount">0</span></small>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-primary"><i class="fas fa-search me-1"></i>Communes: <span id="commonCount">0</span></small>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-2 text-center">
+                                        <small class="text-muted">
+                                            <i class="fas fa-globe me-1"></i>Proxy CORS: 
+                                            <span id="proxyStatus" class="badge bg-secondary">En attente...</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Résultats -->
+        <div id="results" class="section">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="text-primary mb-1">
+                                <i class="fas fa-chart-bar me-2"></i>Résultats de l'analyse SEO
+                            </h2>
+                            <p class="text-muted mb-0" id="analysisInfo">
+                                <i class="fas fa-globe me-1"></i><span id="analyzedDomain">-</span> - 
+                                <i class="fas fa-calendar me-1"></i><span id="analysisDate">-</span>
+                            </p>
+                        </div>
+                        <div>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-primary" onclick="exportResults('json')">
+                                    <i class="fas fa-download me-2"></i>JSON
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" onclick="exportResults('csv')">
+                                    <i class="fas fa-table me-2"></i>CSV
+                                </button>
+                                <button type="button" class="btn btn-outline-danger" onclick="exportResults('pdf')">
+                                    <i class="fas fa-file-pdf me-2"></i>PDF
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="showSection('home')">
+                                    <i class="fas fa-plus me-2"></i>Nouvelle analyse
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Résumé -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center border-primary">
+                        <div class="card-body">
+                            <h3 class="text-primary" id="summaryTotalPages">0</h3>
+                            <p class="mb-0">Pages analysées</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-success">
+                        <div class="card-body">
+                            <h3 class="text-success" id="summaryPagesOk">0</h3>
+                            <p class="mb-0">Pages sans problème</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-warning">
+                        <div class="card-body">
+                            <h3 class="text-warning" id="summaryPagesWithIssues">0</h3>
+                            <p class="mb-0">Pages avec problèmes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center border-info">
+                        <div class="card-body">
+                            <h3 class="text-info" id="summaryAvgResponseTime">0</h3>
+                            <p class="mb-0">Temps moyen (ms)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphiques -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-pie me-2"></i>Répartition des problèmes</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="issuesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-chart-bar me-2"></i>Codes de statut</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Détail des pages -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-list me-2"></i>Détail des pages analysées</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>URL</th>
+                                    <th>Statut</th>
+                                    <th>Titre</th>
+                                    <th>Meta Description</th>
+                                    <th>Problèmes</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pagesTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Historique -->
+        <div id="history" class="section">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="text-primary">
+                            <i class="fas fa-history me-2"></i>Historique des analyses
+                        </h2>
+                        <button class="btn btn-outline-danger" onclick="clearHistory()">
+                            <i class="fas fa-trash me-2"></i>Vider l'historique
+                        </button>
+                    </div>
+
+                    <div id="historyContent">
+                        <!-- Contenu généré dynamiquement -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="fas fa-info-circle text-primary me-2"></i>
+                <strong class="me-auto">SEO Audit Tool</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastBody">
+                Message par défaut
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Variables globales
+        let currentResults = null;
+        let analyzer = null;
+
+        // Classe d'analyse SEO complète
+        class CompleteSEOAnalyzer {
+            constructor() {
+                // Proxy local simple et fiable
+                this.localProxy = 'http://localhost:3001/proxy/';
+                this.results = [];
+                this.discoveryStats = {
+                    sitemap: 0,
+                    robots: 0,
+                    links: 0,
+                    common: 0,
+                    discovered: 0
+                };
+                this.proxyActive = false;
+            }
+            
+            // Test de connectivité du proxy local
+            async testProxyConnectivity() {
+                try {
+                    console.log('🔍 Test du proxy local...');
+                    const testUrl = 'https://www.google.com'; // URL plus fiable
+                    
+                    const response = await fetch(this.localProxy + testUrl, {
+                        method: 'GET',
+                        signal: AbortSignal.timeout(3000) // 3 secondes pour le test
+                    });
+                    
+                    if (response.ok) {
+                        console.log('✅ Proxy local fonctionnel!');
+                        this.proxyActive = true;
+                        
+                        if (typeof updateProxyStatus !== 'undefined') {
+                            updateProxyStatus('Local (Port 3001)', true);
+                        }
+                        
+                        return this.localProxy;
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error(`❌ Proxy local non accessible: ${error.message}`);
+                    this.proxyActive = false;
+                    
+                    if (typeof updateProxyStatus !== 'undefined') {
+                        updateProxyStatus('Proxy local indisponible', false);
+                    }
+                    
+                    throw new Error(`Proxy local indisponible. Assurez-vous que le serveur tourne sur le port 3001.\n\nCommande: node proxy-server.js`);
+                }
+            }
+            
+            // Méthode pour obtenir le proxy actuel
+            getCurrentProxy() {
+                return this.localProxy;
+            }
+            
+            // Fetch simple avec proxy local
+            async fetchWithFallback(url, options = {}) {
+                if (!this.proxyActive) {
+                    throw new Error('Proxy local non disponible. Lancez: node proxy-server.js');
+                }
+                
+                try {
+                    const proxyUrl = this.localProxy + url;
+                    console.log(`🌐 Requête via proxy local: ${url}`);
+                    
+                    const response = await fetch(proxyUrl, {
+                        ...options,
+                        signal: AbortSignal.timeout(10000), // 10 secondes max
+                    });
+                    
+                    if (response.ok) {
+                        console.log(`✅ Succès: ${url}`);
+                        return response;
+                    } else {
+                        const errorText = await response.text().catch(() => 'Erreur inconnue');
+                        throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    }
+                } catch (error) {
+                    console.error(`❌ Échec pour ${url}: ${error.message}`);
+                    
+                    // Mettre à jour le statut si erreur de connexion
+                    if (error.message.includes('Failed to fetch') || error.message.includes('Network')) {
+                        this.proxyActive = false;
+                        if (typeof updateProxyStatus !== 'undefined') {
+                            updateProxyStatus('Connexion perdue', false);
+                        }
+                    }
+                    
+                    throw error;
+                }
+            }
+
+            async analyzeDomain(domain, maxPages = 10, progressCallback = null) {
+                this.results = [];
+                const toAnalyze = new Set();
+                const analyzed = new Set();
+                const currentDepth = new Map(); // Pour gérer la profondeur
+                
+                // Normaliser le domaine
+                const baseDomain = domain.replace(/\/$/, '');
+                const homepage = baseDomain + '/';
+                toAnalyze.add(homepage);
+                currentDepth.set(homepage, 0);
+
+                // 1. Découverte depuis robots.txt
+                console.log('🤖 Analyse du fichier robots.txt...');
+                try {
+                    const robotsUrls = await this.fetchFromRobots(baseDomain);
+                    this.discoveryStats.robots = robotsUrls.length;
+                    robotsUrls.forEach(url => {
+                        if (toAnalyze.size < maxPages) {
+                            toAnalyze.add(url);
+                            currentDepth.set(url, 0);
+                        }
+                    });
+                    console.log(`✅ Trouvé ${robotsUrls.length} URLs via robots.txt`);
+                } catch (e) {
+                    console.log('⚠️ Robots.txt non accessible');
+                }
+
+                // 2. Découverte depuis le sitemap
+                console.log('🗺️ Recherche des sitemaps...');
+                try {
+                    const sitemapUrls = await this.fetchSitemap(baseDomain);
+                    this.discoveryStats.sitemap = sitemapUrls.length;
+                    sitemapUrls.forEach(url => {
+                        if (toAnalyze.size < maxPages) {
+                            toAnalyze.add(url);
+                            currentDepth.set(url, 0);
+                        }
+                    });
+                    console.log(`✅ Trouvé ${sitemapUrls.length} URLs via sitemap`);
+                } catch (e) {
+                    console.log('⚠️ Pas de sitemap trouvé');
+                }
+
+                // 3. Découverte depuis les pages communes
+                console.log('🔍 Recherche des pages communes...');
+                const commonPages = await this.discoverCommonPages(baseDomain);
+                this.discoveryStats.common = commonPages.length;
+                commonPages.forEach(url => {
+                    if (toAnalyze.size < maxPages) {
+                        toAnalyze.add(url);
+                        currentDepth.set(url, 0);
+                    }
+                });
+                console.log(`✅ Trouvé ${commonPages.length} pages communes`);
+
+                let processedCount = 0;
+                const maxDepth = 3; // Profondeur maximum de crawling
+
+                // 4. Crawling adaptatif par profondeur
+                while (processedCount < maxPages && toAnalyze.size > 0) {
+                    const urlsToProcess = Array.from(toAnalyze).filter(url => !analyzed.has(url));
+                    if (urlsToProcess.length === 0) break;
+
+                    // Trier par profondeur (priorité aux pages moins profondes)
+                    urlsToProcess.sort((a, b) => (currentDepth.get(a) || 0) - (currentDepth.get(b) || 0));
+                    
+                    const url = urlsToProcess[0];
+                    if (analyzed.has(url)) continue;
+                    
+                    try {
+                        if (progressCallback) {
+                            this.discoveryStats.discovered = toAnalyze.size;
+                            progressCallback(processedCount, maxPages, url, this.discoveryStats);
+                        }
+
+                        const pageResult = await this.analyzePageComplete(url);
+                        this.results.push(pageResult);
+                        analyzed.add(url);
+
+                        // Découvrir de nouveaux liens depuis cette page
+                        const depth = currentDepth.get(url) || 0;
+                        if (depth < maxDepth && toAnalyze.size < maxPages * 2) { // Multiplier par 2 pour avoir plus d'options
+                            try {
+                                const newLinks = await this.extractLinksAdvanced(url, baseDomain);
+                                let newLinksCount = 0;
+                                newLinks.forEach(link => {
+                                    if (!analyzed.has(link) && !currentDepth.has(link)) {
+                                        toAnalyze.add(link);
+                                        currentDepth.set(link, depth + 1);
+                                        newLinksCount++;
+                                    }
+                                });
+                                
+                                this.discoveryStats.links += newLinksCount;
+                                if (newLinksCount > 0) {
+                                    console.log(`🔗 Découvert ${newLinksCount} nouveaux liens depuis ${url}`);
+                                }
+                            } catch (e) {
+                                console.log('Impossible d\'extraire les liens de:', url);
+                            }
+                        }
+
+                        processedCount++;
+                        
+                    } catch (error) {
+                        console.error(`Erreur lors de l'analyse de ${url}:`, error);
+                        
+                        // Ajouter une entrée d'erreur
+                        this.results.push({
+                            url: url,
+                            status: 'error',
+                            error: error.message,
+                            responseTime: 0,
+                            title: '',
+                            titleLen: 0,
+                            metaDesc: '',
+                            metaDescLen: 0,
+                            h1Count: 0,
+                            h2Count: 0,
+                            issues: [`Erreur d'accès: ${error.message}`],
+                            crawledAt: new Date().toISOString()
+                        });
+                        analyzed.add(url);
+                        processedCount++;
+                    }
+
+                    // Petit délai pour éviter de surcharger le serveur
+                    // Délai adaptatif selon la profondeur
+                    const depth = currentDepth.get(url) || 0;
+                    const delay = Math.min(300 + (depth * 100), 800); // Plus de délai pour les pages profondes
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+
+                if (progressCallback) {
+                    progressCallback(maxPages, maxPages, 'Analyse terminée');
+                }
+
+                return this.results;
+            }
+
+            async fetchSitemap(domain) {
+                const sitemapUrls = [
+                    `${domain}/sitemap.xml`,
+                    `${domain}/sitemap_index.xml`,
+                    `${domain}/sitemap.txt`
+                ];
+
+                for (const sitemapUrl of sitemapUrls) {
+                    try {
+                        const response = await this.fetchWithFallback(sitemapUrl);
+                        if (response.ok) {
+                            const text = await response.text();
+                            return this.parseSitemap(text, domain);
+                        }
+                    } catch (e) {
+                        console.log(`⚠️ Sitemap non accessible: ${sitemapUrl}`);
+                        continue;
+                    }
+                }
+                return [];
+            }
+
+            parseSitemap(sitemapContent, domain) {
+                const urls = [];
+                const urlRegex = /<loc>(.*?)<\/loc>/g;
+                let match;
+                
+                while ((match = urlRegex.exec(sitemapContent)) !== null) {
+                    const url = match[1].trim();
+                    if (url.startsWith(domain) || url.startsWith('http')) {
+                        urls.push(url);
+                    }
+                }
+                
+                return urls.slice(0, 50); // Limiter pour éviter les sitemaps trop volumineux
+            }
+
+            async fetchFromRobots(domain) {
+                try {
+                    const response = await this.fetchWithFallback(domain + '/robots.txt');
+                    if (!response.ok) return [];
+                    
+                    const text = await response.text();
+                    const urls = [];
+                    
+                    // Extraire les sitemaps depuis robots.txt
+                    const sitemapRegex = /Sitemap:\s*(.*)/gi;
+                    let match;
+                    while ((match = sitemapRegex.exec(text)) !== null) {
+                        const sitemapUrl = match[1].trim();
+                        try {
+                            const sitemapUrls = await this.fetchSitemapDirect(sitemapUrl);
+                            urls.push(...sitemapUrls);
+                        } catch (e) {
+                            console.log('Erreur sitemap depuis robots:', e);
+                        }
+                    }
+                    
+                    return urls.slice(0, 20); // Limiter
+                } catch (error) {
+                    return [];
+                }
+            }
+            
+            async discoverCommonPages(domain) {
+                const commonPaths = [
+                    '/about', '/about-us', '/a-propos',
+                    '/contact', '/contactez-nous',
+                    '/services', '/produits', '/products',
+                    '/blog', '/actualites', '/news',
+                    '/portfolio', '/realisations',
+                    '/equipe', '/team',
+                    '/mentions-legales', '/legal',
+                    '/politique-confidentialite', '/privacy',
+                    '/conditions', '/terms',
+                    '/faq', '/aide', '/help',
+                    '/plan-site', '/sitemap'
+                ];
+                
+                // Test des pages communes en série pour éviter de surcharger les proxies
+                const discoveredUrls = [];
+                
+                for (const path of commonPaths.slice(0, 8)) { // Limiter à 8 pour éviter les timeouts
+                    try {
+                        const testUrl = domain + path;
+                        const response = await this.fetchWithFallback(testUrl, { 
+                            method: 'HEAD'
+                        });
+                        if (response.ok) {
+                            discoveredUrls.push(testUrl);
+                            console.log(`✅ Page commune trouvée: ${path}`);
+                        }
+                    } catch (e) {
+                        // Silencieux pour les pages communes
+                    }
+                    
+                    // Petit délai entre les requêtes
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+                
+                return discoveredUrls;
+                
+                /* Ancien code parallèle qui peut surcharger les proxies
+                const promises = commonPaths.map(async (path) => {
+                    try {
+                        const testUrl = domain + path;
+                        const response = await this.fetchWithFallback(testUrl, { 
+                            method: 'HEAD'
+                        });
+                        if (response.ok) {
+                            return testUrl;
+                        }
+                    } catch (e) {
+                        return null;
+                    }
+                    return null;
+                });
+                */
+            }
+            
+            async fetchSitemapDirect(sitemapUrl) {
+                try {
+                    const response = await this.fetchWithFallback(sitemapUrl);
+                    if (response.ok) {
+                        const text = await response.text();
+                        return this.parseSitemap(text, new URL(sitemapUrl).origin);
+                    }
+                } catch (e) {
+                    console.log(`⚠️ Échec sitemap ${sitemapUrl}: ${e.message}`);
+                }
+                return [];
+            }
+
+            async extractLinksAdvanced(pageUrl, baseDomain) {
+                try {
+                    const response = await this.fetchWithFallback(pageUrl);
+                    if (!response.ok) return [];
+                    
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    const extractedLinks = new Set();
+                    
+                    // 1. Liens classiques <a href>
+                    const links = doc.querySelectorAll('a[href]');
+                    links.forEach(link => {
+                        const href = this.normalizeUrl(link.getAttribute('href'), pageUrl, baseDomain);
+                        if (href && this.isValidInternalUrl(href, baseDomain)) {
+                            extractedLinks.add(href);
+                        }
+                    });
+                    
+                    // 2. Liens de navigation spécifiques
+                    const navSelectors = [
+                        'nav a[href]',           // Menus de navigation
+                        '.menu a[href]',         // Menus avec classe
+                        '.navbar a[href]',       // Barres de navigation
+                        '.nav-link[href]',       // Liens Bootstrap
+                        '.breadcrumb a[href]',   // Fil d'Ariane
+                        'header a[href]',        // Liens dans le header
+                        'footer a[href]',        // Liens dans le footer
+                        '.pagination a[href]'    // Liens de pagination
+                    ];
+                    
+                    navSelectors.forEach(selector => {
+                        const navLinks = doc.querySelectorAll(selector);
+                        navLinks.forEach(link => {
+                            const href = this.normalizeUrl(link.getAttribute('href'), pageUrl, baseDomain);
+                            if (href && this.isValidInternalUrl(href, baseDomain)) {
+                                extractedLinks.add(href);
+                            }
+                        });
+                    });
+                    
+                    // 3. Liens dans le contenu principal
+                    const contentSelectors = [
+                        'main a[href]',          // Contenu principal
+                        'article a[href]',       // Articles
+                        '.content a[href]',      // Zones de contenu
+                        '.post a[href]',         // Posts de blog
+                        '.entry a[href]'         // Entrées
+                    ];
+                    
+                    contentSelectors.forEach(selector => {
+                        const contentLinks = doc.querySelectorAll(selector);
+                        contentLinks.forEach(link => {
+                            const href = this.normalizeUrl(link.getAttribute('href'), pageUrl, baseDomain);
+                            if (href && this.isValidInternalUrl(href, baseDomain)) {
+                                extractedLinks.add(href);
+                            }
+                        });
+                    });
+                    
+                    return Array.from(extractedLinks);
+                } catch (error) {
+                    return [];
+                }
+            }
+            
+            normalizeUrl(href, currentUrl, baseDomain) {
+                if (!href) return null;
+                
+                href = href.trim();
+                
+                // Ignorer les liens non utiles
+                if (href.startsWith('#') || href.startsWith('mailto:') || 
+                    href.startsWith('tel:') || href.startsWith('javascript:')) {
+                    return null;
+                }
+                
+                // URL absolue déjà correcte
+                if (href.startsWith('http')) {
+                    return href;
+                }
+                
+                // URL relative depuis la racine
+                if (href.startsWith('/')) {
+                    return baseDomain + href;
+                }
+                
+                // URL relative depuis la page courante
+                if (href.startsWith('./')) {
+                    const currentPath = currentUrl.substring(0, currentUrl.lastIndexOf('/'));
+                    return currentPath + href.substring(1);
+                }
+                
+                // URL relative simple
+                if (!href.startsWith('../')) {
+                    const currentPath = currentUrl.substring(0, currentUrl.lastIndexOf('/'));
+                    return currentPath + '/' + href;
+                }
+                
+                return null; // Ignorer les chemins complexes pour éviter les erreurs
+            }
+            
+            isValidInternalUrl(url, baseDomain) {
+                try {
+                    // Doit commencer par le domaine de base
+                    if (!url.startsWith(baseDomain)) {
+                        return false;
+                    }
+                    
+                    // Ignorer certains types de fichiers
+                    const excludeExtensions = ['.pdf', '.jpg', '.jpeg', '.png', '.gif', '.css', '.js', '.ico', '.svg', '.woff', '.woff2', '.ttf', '.zip', '.rar', '.doc', '.docx', '.xls', '.xlsx'];
+                    const lowercaseUrl = url.toLowerCase();
+                    
+                    for (const ext of excludeExtensions) {
+                        if (lowercaseUrl.endsWith(ext)) {
+                            return false;
+                        }
+                    }
+                    
+                    // Ignorer les paramètres de tracking courants
+                    if (lowercaseUrl.includes('utm_') || lowercaseUrl.includes('ref=') || 
+                        lowercaseUrl.includes('source=') || lowercaseUrl.includes('campaign=')) {
+                        // Nettoyer l'URL des paramètres de tracking
+                        const cleanUrl = url.split('?')[0];
+                        return cleanUrl.length > baseDomain.length + 1;
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    return false;
+                }
+            }
+
+            async analyzePageComplete(url) {
+                const startTime = Date.now();
+                let pageData = {
+                    url: url,
+                    status: 'unknown',
+                    responseTime: 0,
+                    title: '',
+                    titleLen: 0,
+                    metaDesc: '',
+                    metaDescLen: 0,
+                    h1Count: 0,
+                    h2Count: 0,
+                    h3Count: 0,
+                    imageCount: 0,
+                    imagesWithoutAlt: 0,
+                    internalLinks: 0,
+                    externalLinks: 0,
+                    wordCount: 0,
+                    issues: [],
+                    crawledAt: new Date().toISOString()
+                };
+
+                try {
+                    const response = await this.fetchWithFallback(url, {
+                        method: 'GET',
+                        headers: {
+                            'User-Agent': 'SEO-Audit-Tool/1.0'
+                        }
+                    });
+
+                    pageData.responseTime = Date.now() - startTime;
+                    pageData.status = response.status;
+
+                    if (!response.ok) {
+                        pageData.issues.push(`Code de statut HTTP: ${response.status}`);
+                        return pageData;
+                    }
+
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    // Analyse du titre
+                    const titleElement = doc.querySelector('title');
+                    if (titleElement) {
+                        pageData.title = titleElement.textContent.trim();
+                        pageData.titleLen = pageData.title.length;
+                    }
+
+                    // Vérifications du titre
+                    if (pageData.titleLen === 0) {
+                        pageData.issues.push('Titre manquant');
+                    } else if (pageData.titleLen < 30) {
+                        pageData.issues.push('Titre trop court (< 30 caractères)');
+                    } else if (pageData.titleLen > 60) {
+                        pageData.issues.push('Titre trop long (> 60 caractères)');
+                    }
+
+                    // Analyse meta description
+                    const metaDesc = doc.querySelector('meta[name="description"]');
+                    if (metaDesc) {
+                        pageData.metaDesc = metaDesc.getAttribute('content').trim();
+                        pageData.metaDescLen = pageData.metaDesc.length;
+                    }
+
+                    // Vérifications meta description
+                    if (pageData.metaDescLen === 0) {
+                        pageData.issues.push('Meta description manquante');
+                    } else if (pageData.metaDescLen < 120) {
+                        pageData.issues.push('Meta description trop courte (< 120 caractères)');
+                    } else if (pageData.metaDescLen > 160) {
+                        pageData.issues.push('Meta description trop longue (> 160 caractères)');
+                    }
+
+                    // Analyse des titres H1, H2, H3
+                    pageData.h1Count = doc.querySelectorAll('h1').length;
+                    pageData.h2Count = doc.querySelectorAll('h2').length;
+                    pageData.h3Count = doc.querySelectorAll('h3').length;
+
+                    if (pageData.h1Count === 0) {
+                        pageData.issues.push('Aucun titre H1 trouvé');
+                    } else if (pageData.h1Count > 1) {
+                        pageData.issues.push(`Multiples titres H1 (${pageData.h1Count})`);
+                    }
+
+                    // Analyse des images
+                    const images = doc.querySelectorAll('img');
+                    pageData.imageCount = images.length;
+                    pageData.imagesWithoutAlt = Array.from(images).filter(img => !img.getAttribute('alt')).length;
+
+                    if (pageData.imagesWithoutAlt > 0) {
+                        pageData.issues.push(`${pageData.imagesWithoutAlt} image(s) sans attribut alt`);
+                    }
+
+                    // Analyse des liens
+                    const links = doc.querySelectorAll('a[href]');
+                    const baseDomain = new URL(url).origin;
+                    
+                    pageData.internalLinks = Array.from(links).filter(link => {
+                        const href = link.getAttribute('href');
+                        return href && (href.startsWith('/') || href.startsWith(baseDomain));
+                    }).length;
+
+                    pageData.externalLinks = Array.from(links).filter(link => {
+                        const href = link.getAttribute('href');
+                        return href && href.startsWith('http') && !href.startsWith(baseDomain);
+                    }).length;
+
+                    // Comptage approximatif des mots
+                    const textContent = doc.body ? doc.body.textContent : '';
+                    pageData.wordCount = textContent.trim().split(/\s+/).length;
+
+                    if (pageData.wordCount < 300) {
+                        pageData.issues.push('Contenu textuel insuffisant (< 300 mots)');
+                    }
+
+                    // Vérifications techniques supplémentaires
+                    const canonical = doc.querySelector('link[rel="canonical"]');
+                    if (!canonical) {
+                        pageData.issues.push('URL canonique manquante');
+                    }
+
+                    const viewport = doc.querySelector('meta[name="viewport"]');
+                    if (!viewport) {
+                        pageData.issues.push('Meta viewport manquante (non responsive)');
+                    }
+
+                    return pageData;
+
+                } catch (error) {
+                    pageData.status = 'error';
+                    pageData.issues.push(`Erreur d'analyse: ${error.message}`);
+                    return pageData;
+                }
+            }
+
+            getSummary(results) {
+                const summary = {
+                    totalPages: results.length,
+                    pagesOk: 0,
+                    pagesWithIssues: 0,
+                    avgResponseTime: 0,
+                    totalIssues: 0,
+                    topIssues: {},
+                    statusCodes: {}
+                };
+
+                let totalResponseTime = 0;
+
+                results.forEach(page => {
+                    // Codes de statut
+                    summary.statusCodes[page.status] = (summary.statusCodes[page.status] || 0) + 1;
+
+                    // Temps de réponse
+                    totalResponseTime += page.responseTime;
+
+                    // Issues
+                    if (page.issues.length === 0) {
+                        summary.pagesOk++;
+                    } else {
+                        summary.pagesWithIssues++;
+                        summary.totalIssues += page.issues.length;
+                        
+                        page.issues.forEach(issue => {
+                            summary.topIssues[issue] = (summary.topIssues[issue] || 0) + 1;
+                        });
+                    }
+                });
+
+                summary.avgResponseTime = results.length > 0 ? Math.round(totalResponseTime / results.length) : 0;
+
+                return summary;
+            }
+        }
+
+        // Fonctions principales
+        async function startAnalysis(event) {
+            event.preventDefault();
+            
+            const domain = document.getElementById('domain').value;
+            const maxPages = parseInt(document.getElementById('maxPages').value);
+
+            if (!domain) {
+                showToast('Veuillez saisir une URL', 'danger');
+                return;
+            }
+
+            try {
+                analyzer = new CompleteSEOAnalyzer();
+                showToast('Démarrage de l\'analyse SEO...', 'info');
+                showSection('progress');
+                
+                // Test de connectivité des proxies avant de commencer
+                showToast('Test de connectivité des proxies CORS...', 'info');
+                document.getElementById('proxyStatus').textContent = 'Test en cours...';
+                document.getElementById('proxyStatus').className = 'badge bg-warning';
+                
+                try {
+                    await analyzer.testProxyConnectivity();
+                } catch (proxyError) {
+                    console.warn('Problème de connectivité:', proxyError);
+                    showToast('Attention: Problèmes de connectivité détectés. L\'analyse peut être limitée.', 'warning');
+                }
+
+                const results = await analyzer.analyzeDomain(domain, maxPages, updateProgress);
+
+                currentResults = {
+                    metadata: {
+                        domain: domain,
+                        analysis_date: new Date().toISOString(),
+                        total_pages: results.length,
+                        analysis_id: `analysis_${Date.now()}`
+                    },
+                    summary: analyzer.getSummary(results),
+                    pages: results
+                };
+
+                // Sauvegarder localement
+                saveAnalysisLocally(currentResults);
+                
+                showResults();
+                showToast('Analyse terminée avec succès!', 'success');
+                
+            } catch (error) {
+                console.error('Erreur lors de l\'analyse:', error);
+                showToast('Erreur lors de l\'analyse: ' + error.message, 'danger');
+                showSection('home');
+            }
+        }
+
+        function updateProgress(current, total, url, discoveryStats = null) {
+            const percent = Math.round((current / total) * 100);
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = percent + '%';
+            document.getElementById('currentUrl').textContent = url || 'Traitement...';
+            document.getElementById('pagesProcessed').textContent = current;
+            document.getElementById('totalPages').textContent = total;
+            
+            // Afficher les statistiques de découverte si disponibles
+            if (discoveryStats) {
+                document.getElementById('pagesDiscovered').textContent = discoveryStats.discovered || 0;
+                document.getElementById('sitemapCount').textContent = discoveryStats.sitemap || 0;
+                document.getElementById('robotsCount').textContent = discoveryStats.robots || 0;
+                document.getElementById('linksCount').textContent = discoveryStats.links || 0;
+                document.getElementById('commonCount').textContent = discoveryStats.common || 0;
+                
+                // Mettre à jour le statut du proxy
+                if (analyzer) {
+                    const proxyName = analyzer.getCurrentProxy().includes('allorigins') ? 'AllOrigins' :
+                                     analyzer.getCurrentProxy().includes('cors-anywhere') ? 'CORS-Anywhere' :
+                                     analyzer.getCurrentProxy().includes('thingproxy') ? 'ThingProxy' :
+                                     analyzer.getCurrentProxy().includes('codetabs') ? 'CodeTabs' :
+                                     analyzer.getCurrentProxy().includes('yacdn') ? 'YaCDN' : 'Direct';
+                    
+                    document.getElementById('proxyStatus').textContent = proxyName;
+                    document.getElementById('proxyStatus').className = 'badge bg-success';
+                }
+            }
+            
+            document.getElementById('issuesFound').textContent = current > 0 ? 
+                (currentResults?.pages?.slice(0, current).reduce((sum, p) => sum + p.issues.length, 0) || 0) : 0;
+        }
+        
+        function updateProxyStatus(proxyName, isWorking) {
+            const statusElement = document.getElementById('proxyStatus');
+            if (statusElement) {
+                statusElement.textContent = proxyName;
+                statusElement.className = isWorking ? 'badge bg-success' : 'badge bg-warning';
+            }
+        }
+
+        function showResults() {
+            if (!currentResults) return;
+
+            showSection('results');
+
+            const { metadata, summary, pages } = currentResults;
+
+            // Mettre à jour les informations générales
+            document.getElementById('analyzedDomain').textContent = metadata.domain;
+            document.getElementById('analysisDate').textContent = new Date(metadata.analysis_date).toLocaleString();
+
+            // Mettre à jour le résumé
+            document.getElementById('summaryTotalPages').textContent = summary.totalPages;
+            document.getElementById('summaryPagesOk').textContent = summary.pagesOk;
+            document.getElementById('summaryPagesWithIssues').textContent = summary.pagesWithIssues;
+            document.getElementById('summaryAvgResponseTime').textContent = summary.avgResponseTime;
+
+            // Créer les graphiques
+            createIssuesChart(summary.topIssues);
+            createStatusChart(summary.statusCodes);
+
+            // Remplir le tableau des pages
+            fillPagesTable(pages);
+        }
+
+        function createIssuesChart(topIssues) {
+            const ctx = document.getElementById('issuesChart').getContext('2d');
+            
+            // Nettoyer le graphique existant
+            if (window.issuesChartInstance) {
+                window.issuesChartInstance.destroy();
+            }
+            
+            const sortedIssues = Object.entries(topIssues)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8); // Top 8 des problèmes
+
+            window.issuesChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: sortedIssues.map(([issue]) => issue.length > 30 ? issue.substring(0, 30) + '...' : issue),
+                    datasets: [{
+                        data: sortedIssues.map(([, count]) => count),
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                            '#9966FF', '#FF9F40', '#FF6384', '#36A2EB'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        }
+                    }
+                }
+            });
+        }
+
+        function createStatusChart(statusCodes) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            
+            // Nettoyer le graphique existant
+            if (window.statusChartInstance) {
+                window.statusChartInstance.destroy();
+            }
+
+            const statusLabels = Object.keys(statusCodes);
+            const statusCounts = Object.values(statusCodes);
+
+            window.statusChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        label: 'Nombre de pages',
+                        data: statusCounts,
+                        backgroundColor: statusLabels.map(status => {
+                            if (status.toString().startsWith('2')) return '#28a745';
+                            if (status.toString().startsWith('3')) return '#ffc107';
+                            if (status.toString().startsWith('4')) return '#dc3545';
+                            if (status.toString().startsWith('5')) return '#6f42c1';
+                            return '#6c757d';
+                        })
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function fillPagesTable(pages) {
+            const tbody = document.getElementById('pagesTable');
+            tbody.innerHTML = '';
+
+            pages.forEach((page, index) => {
+                const row = document.createElement('tr');
+                
+                const statusBadge = getStatusBadge(page.status);
+                const issuesText = page.issues.length > 0 ? 
+                    page.issues.slice(0, 2).join(', ') + (page.issues.length > 2 ? '...' : '') : 
+                    'Aucun problème';
+                const issuesClass = page.issues.length > 0 ? 'text-warning' : 'text-success';
+
+                row.innerHTML = `
+                    <td><a href="${page.url}" target="_blank" class="text-decoration-none">${page.url.length > 50 ? page.url.substring(0, 50) + '...' : page.url}</a></td>
+                    <td>${statusBadge}</td>
+                    <td>${page.title || '-'} ${page.titleLen ? `<small class="text-muted">(${page.titleLen} car.)</small>` : ''}</td>
+                    <td>${page.metaDesc ? (page.metaDesc.length > 50 ? page.metaDesc.substring(0, 50) + '...' : page.metaDesc) : '-'} ${page.metaDescLen ? `<small class="text-muted">(${page.metaDescLen} car.)</small>` : ''}</td>
+                    <td class="${issuesClass}">${issuesText}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="showPageDetails(${index})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function getStatusBadge(status) {
+            if (status === 'error') return '<span class="badge bg-danger">Erreur</span>';
+            if (status.toString().startsWith('2')) return '<span class="badge bg-success">' + status + '</span>';
+            if (status.toString().startsWith('3')) return '<span class="badge bg-warning">' + status + '</span>';
+            if (status.toString().startsWith('4')) return '<span class="badge bg-danger">' + status + '</span>';
+            if (status.toString().startsWith('5')) return '<span class="badge bg-dark">' + status + '</span>';
+            return '<span class="badge bg-secondary">' + status + '</span>';
+        }
+
+        // Générer des recommandations intelligentes
+        function generateRecommendations(page) {
+            const recommendations = [];
+            
+            // Recommandations pour le titre
+            if (!page.title || page.titleLen === 0) {
+                recommendations.push({
+                    type: 'critical',
+                    category: 'SEO On-Page',
+                    issue: 'Titre manquant',
+                    recommendation: 'Ajoutez un titre unique et descriptif de 50-60 caractères',
+                    impact: 'Très élevé',
+                    priority: 1
+                });
+            } else if (page.titleLen < 30) {
+                recommendations.push({
+                    type: 'warning',
+                    category: 'SEO On-Page',
+                    issue: 'Titre trop court',
+                    recommendation: `Allongez le titre (${page.titleLen} car.). Optimal: 50-60 caractères`,
+                    impact: 'Moyen',
+                    priority: 2
+                });
+            } else if (page.titleLen > 60) {
+                recommendations.push({
+                    type: 'warning',
+                    category: 'SEO On-Page',
+                    issue: 'Titre trop long',
+                    recommendation: `Réduisez le titre (${page.titleLen} car.). Optimal: 50-60 caractères`,
+                    impact: 'Moyen',
+                    priority: 2
+                });
+            }
+            
+            // Recommandations meta description
+            if (!page.metaDesc || page.metaDescLen === 0) {
+                recommendations.push({
+                    type: 'critical',
+                    category: 'SEO On-Page',
+                    issue: 'Meta description manquante',
+                    recommendation: 'Ajoutez une meta description engageante de 150-160 caractères',
+                    impact: 'Très élevé',
+                    priority: 1
+                });
+            } else if (page.metaDescLen < 120) {
+                recommendations.push({
+                    type: 'info',
+                    category: 'SEO On-Page',
+                    issue: 'Meta description courte',
+                    recommendation: `Allongez la meta description (${page.metaDescLen} car.). Optimal: 150-160 caractères`,
+                    impact: 'Faible',
+                    priority: 3
+                });
+            } else if (page.metaDescLen > 160) {
+                recommendations.push({
+                    type: 'warning',
+                    category: 'SEO On-Page',
+                    issue: 'Meta description trop longue',
+                    recommendation: `Réduisez la meta description (${page.metaDescLen} car.). Elle sera tronquée dans les résultats`,
+                    impact: 'Moyen',
+                    priority: 2
+                });
+            }
+            
+            // Recommandations H1
+            if (page.h1Count === 0) {
+                recommendations.push({
+                    type: 'critical',
+                    category: 'Structure',
+                    issue: 'Aucun titre H1',
+                    recommendation: 'Ajoutez un titre H1 unique qui décrit le contenu principal',
+                    impact: 'Très élevé',
+                    priority: 1
+                });
+            } else if (page.h1Count > 1) {
+                recommendations.push({
+                    type: 'warning',
+                    category: 'Structure',
+                    issue: `Multiples H1 (${page.h1Count})`,
+                    recommendation: 'Utilisez un seul H1 par page. Convertissez les autres en H2 ou H3',
+                    impact: 'Moyen',
+                    priority: 2
+                });
+            }
+            
+            // Recommandations contenu
+            if (page.wordCount && page.wordCount < 300) {
+                recommendations.push({
+                    type: 'warning',
+                    category: 'Contenu',
+                    issue: 'Contenu insuffisant',
+                    recommendation: `Enrichissez le contenu (${page.wordCount} mots). Minimum: 300 mots`,
+                    impact: 'Moyen',
+                    priority: 2
+                });
+            }
+            
+            // Recommandations images
+            if (page.imagesWithoutAlt > 0) {
+                recommendations.push({
+                    type: 'warning',
+                    category: 'Accessibilité',
+                    issue: `Images sans attribut alt (${page.imagesWithoutAlt})`,
+                    recommendation: 'Ajoutez des descriptions alt pour toutes les images',
+                    impact: 'Moyen',
+                    priority: 2
+                });
+            }
+            
+            // Recommandations performance
+            if (page.responseTime > 3000) {
+                recommendations.push({
+                    type: 'critical',
+                    category: 'Performance',
+                    issue: 'Temps de chargement lent',
+                    recommendation: `Optimisez la vitesse (${page.responseTime}ms). Cible: < 2000ms`,
+                    impact: 'Très élevé',
+                    priority: 1
+                });
+            } else if (page.responseTime > 2000) {
+                recommendations.push({
+                    type: 'warning',
+                    category: 'Performance',
+                    issue: 'Temps de chargement moyen',
+                    recommendation: `Améliorez la vitesse (${page.responseTime}ms). Cible: < 2000ms`,
+                    impact: 'Moyen',
+                    priority: 2
+                });
+            }
+            
+            // Recommandations structure
+            if (page.h2Count === 0 && page.wordCount > 500) {
+                recommendations.push({
+                    type: 'info',
+                    category: 'Structure',
+                    issue: 'Manque de sous-titres H2',
+                    recommendation: 'Ajoutez des sous-titres H2 pour structurer le contenu long',
+                    impact: 'Faible',
+                    priority: 3
+                });
+            }
+            
+            return recommendations.sort((a, b) => a.priority - b.priority);
+        }
+        
+        // Calculer le score SEO global
+        function calculateSEOScore(page) {
+            let score = 100;
+            let checks = {
+                title: 0,
+                metaDesc: 0,
+                h1: 0,
+                content: 0,
+                images: 0,
+                performance: 0
+            };
+            
+            // Vérifications titre (20 points)
+            if (!page.title || page.titleLen === 0) {
+                score -= 20;
+            } else if (page.titleLen < 30 || page.titleLen > 60) {
+                score -= 10;
+                checks.title = 10;
+            } else {
+                checks.title = 20;
+            }
+            
+            // Vérifications meta description (15 points)
+            if (!page.metaDesc || page.metaDescLen === 0) {
+                score -= 15;
+            } else if (page.metaDescLen < 120 || page.metaDescLen > 160) {
+                score -= 5;
+                checks.metaDesc = 10;
+            } else {
+                checks.metaDesc = 15;
+            }
+            
+            // Vérifications H1 (15 points)
+            if (page.h1Count === 0) {
+                score -= 15;
+            } else if (page.h1Count > 1) {
+                score -= 8;
+                checks.h1 = 7;
+            } else {
+                checks.h1 = 15;
+            }
+            
+            // Vérifications contenu (20 points)
+            if (page.wordCount && page.wordCount < 300) {
+                score -= 15;
+                checks.content = 5;
+            } else {
+                checks.content = 20;
+            }
+            
+            // Vérifications images (15 points)
+            if (page.imagesWithoutAlt > 0) {
+                const penalty = Math.min(page.imagesWithoutAlt * 3, 15);
+                score -= penalty;
+                checks.images = 15 - penalty;
+            } else {
+                checks.images = 15;
+            }
+            
+            // Vérifications performance (15 points)
+            if (page.responseTime > 3000) {
+                score -= 15;
+            } else if (page.responseTime > 2000) {
+                score -= 8;
+                checks.performance = 7;
+            } else {
+                checks.performance = 15;
+            }
+            
+            return { score: Math.max(0, score), checks };
+        }
+        
+        function showPageDetails(index) {
+            const page = currentResults.pages[index];
+            const recommendations = generateRecommendations(page);
+            const seoScore = calculateSEOScore(page);
+            
+            // Grouper les recommandations par catégorie
+            const groupedRecommendations = recommendations.reduce((groups, rec) => {
+                if (!groups[rec.category]) groups[rec.category] = [];
+                groups[rec.category].push(rec);
+                return groups;
+            }, {});
+            
+            let detailsHTML = `
+                <div class="modal fade" id="pageDetailsModal" tabindex="-1">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title">
+                                    <i class="fas fa-search me-2"></i>Analyse détaillée de la page
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body p-4">
+
+                                <!-- URL et Score Global -->
+                                <div class="row mb-4">
+                                    <div class="col-md-8">
+                                        <h6 class="text-muted mb-2"><i class="fas fa-link me-2"></i>URL analysée</h6>
+                                        <p class="mb-0">
+                                            <a href="${page.url}" target="_blank" class="text-decoration-none">
+                                                ${page.url}
+                                                <i class="fas fa-external-link-alt ms-1 small"></i>
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <div class="card border-0 bg-light">
+                                            <div class="card-body py-3">
+                                                <h3 class="mb-1 text-${
+                                                    seoScore.score >= 80 ? 'success' : 
+                                                    seoScore.score >= 60 ? 'warning' : 'danger'
+                                                }">${seoScore.score}/100</h3>
+                                                <p class="mb-0 small text-muted">Score SEO Global</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Onglets -->
+                                <ul class="nav nav-tabs mb-4" id="detailTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" 
+                                                data-bs-target="#overview" type="button" role="tab">
+                                            <i class="fas fa-chart-pie me-1"></i>Vue d'ensemble
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="seo-tab" data-bs-toggle="tab" 
+                                                data-bs-target="#seo" type="button" role="tab">
+                                            <i class="fas fa-search me-1"></i>SEO Détaillé
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" 
+                                                data-bs-target="#recommendations" type="button" role="tab">
+                                            <i class="fas fa-lightbulb me-1"></i>Recommandations
+                                            ${recommendations.length > 0 ? `<span class="badge bg-warning ms-1">${recommendations.length}</span>` : ''}
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="technical-tab" data-bs-toggle="tab" 
+                                                data-bs-target="#technical" type="button" role="tab">
+                                            <i class="fas fa-cog me-1"></i>Technique
+                                        </button>
+                                    </li>
+                                </ul>
+                                
+                                <!-- Contenu des onglets -->
+                                <div class="tab-content" id="detailTabContent">
+                                    <!-- Onglet Vue d'ensemble -->
+                                    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                                        <div class="row">
+                                            <!-- Indicateurs clés -->
+                                            <div class="col-md-6">
+                                                <h6 class="mb-3"><i class="fas fa-tachometer-alt me-2"></i>Indicateurs clés</h6>
+                                                <div class="row g-3 mb-4">
+                                                    <div class="col-sm-6">
+                                                        <div class="card border-0 bg-light">
+                                                            <div class="card-body text-center py-3">
+                                                                <div class="text-${page.status.toString().startsWith('2') ? 'success' : 'danger'} fs-4 mb-1">
+                                                                    <i class="fas fa-${page.status.toString().startsWith('2') ? 'check-circle' : 'times-circle'}"></i>
+                                                                </div>
+                                                                <div class="fw-bold">${page.status}</div>
+                                                                <small class="text-muted">Code HTTP</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="card border-0 bg-light">
+                                                            <div class="card-body text-center py-3">
+                                                                <div class="text-${page.responseTime > 2000 ? 'danger' : page.responseTime > 1000 ? 'warning' : 'success'} fs-4 mb-1">
+                                                                    <i class="fas fa-stopwatch"></i>
+                                                                </div>
+                                                                <div class="fw-bold">${page.responseTime}ms</div>
+                                                                <small class="text-muted">Temps réponse</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="card border-0 bg-light">
+                                                            <div class="card-body text-center py-3">
+                                                                <div class="text-info fs-4 mb-1">
+                                                                    <i class="fas fa-file-alt"></i>
+                                                                </div>
+                                                                <div class="fw-bold">${page.wordCount || 0}</div>
+                                                                <small class="text-muted">Mots</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="card border-0 bg-light">
+                                                            <div class="card-body text-center py-3">
+                                                                <div class="text-warning fs-4 mb-1">
+                                                                    <i class="fas fa-exclamation-triangle"></i>
+                                                                </div>
+                                                                <div class="fw-bold">${page.issues.length}</div>
+                                                                <small class="text-muted">Problèmes</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Score détaillé -->
+                                            <div class="col-md-6">
+                                                <h6 class="mb-3"><i class="fas fa-chart-bar me-2"></i>Détail du score</h6>
+                                                <div class="mb-2">
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>Titre</span>
+                                                        <span>${seoScore.checks.title}/20</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar bg-${seoScore.checks.title >= 15 ? 'success' : seoScore.checks.title >= 10 ? 'warning' : 'danger'}" 
+                                                             style="width: ${(seoScore.checks.title / 20) * 100}%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>Meta description</span>
+                                                        <span>${seoScore.checks.metaDesc}/15</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar bg-${seoScore.checks.metaDesc >= 12 ? 'success' : seoScore.checks.metaDesc >= 8 ? 'warning' : 'danger'}" 
+                                                             style="width: ${(seoScore.checks.metaDesc / 15) * 100}%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>Structure H1</span>
+                                                        <span>${seoScore.checks.h1}/15</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar bg-${seoScore.checks.h1 >= 12 ? 'success' : seoScore.checks.h1 >= 7 ? 'warning' : 'danger'}" 
+                                                             style="width: ${(seoScore.checks.h1 / 15) * 100}%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>Contenu</span>
+                                                        <span>${seoScore.checks.content}/20</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar bg-${seoScore.checks.content >= 15 ? 'success' : seoScore.checks.content >= 10 ? 'warning' : 'danger'}" 
+                                                             style="width: ${(seoScore.checks.content / 20) * 100}%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>Images</span>
+                                                        <span>${seoScore.checks.images}/15</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar bg-${seoScore.checks.images >= 12 ? 'success' : seoScore.checks.images >= 8 ? 'warning' : 'danger'}" 
+                                                             style="width: ${(seoScore.checks.images / 15) * 100}%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <div class="d-flex justify-content-between">
+                                                        <span>Performance</span>
+                                                        <span>${seoScore.checks.performance}/15</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar bg-${seoScore.checks.performance >= 12 ? 'success' : seoScore.checks.performance >= 7 ? 'warning' : 'danger'}" 
+                                                             style="width: ${(seoScore.checks.performance / 15) * 100}%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Onglet SEO Détaillé -->
+                                    <div class="tab-pane fade" id="seo" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="card border-0 shadow-sm mb-4">
+                                                    <div class="card-header bg-primary text-white">
+                                                        <h6 class="mb-0"><i class="fas fa-heading me-2"></i>Optimisation On-Page</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="mb-3">
+                                                            <strong>Titre de la page :</strong>
+                                                            <div class="mt-1">
+                                                                ${page.title ? 
+                                                                    `<span class="text-success">${page.title}</span>` : 
+                                                                    '<span class="text-danger">Aucun titre</span>'
+                                                                }
+                                                                <span class="badge ms-2 ${
+                                                                    page.titleLen === 0 ? 'bg-danger' : 
+                                                                    page.titleLen < 30 || page.titleLen > 60 ? 'bg-warning' : 'bg-success'
+                                                                }">${page.titleLen} car.</span>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="mb-3">
+                                                            <strong>Meta description :</strong>
+                                                            <div class="mt-1">
+                                                                ${page.metaDesc ? 
+                                                                    `<span class="text-muted small">${page.metaDesc}</span>` : 
+                                                                    '<span class="text-danger">Aucune meta description</span>'
+                                                                }
+                                                                <span class="badge ms-2 ${
+                                                                    page.metaDescLen === 0 ? 'bg-danger' : 
+                                                                    page.metaDescLen < 120 || page.metaDescLen > 160 ? 'bg-warning' : 'bg-success'
+                                                                }">${page.metaDescLen} car.</span>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-4">
+                                                                <div class="text-center">
+                                                                    <div class="fs-4 text-${page.h1Count === 1 ? 'success' : 'warning'}">${page.h1Count}</div>
+                                                                    <small class="text-muted">H1</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <div class="text-center">
+                                                                    <div class="fs-4 text-info">${page.h2Count || 0}</div>
+                                                                    <small class="text-muted">H2</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <div class="text-center">
+                                                                    <div class="fs-4 text-info">${page.h3Count || 0}</div>
+                                                                    <small class="text-muted">H3</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-6">
+                                                <div class="card border-0 shadow-sm mb-4">
+                                                    <div class="card-header bg-info text-white">
+                                                        <h6 class="mb-0"><i class="fas fa-images me-2"></i>Médias et Liens</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row mb-3">
+                                                            <div class="col-6">
+                                                                <div class="text-center">
+                                                                    <div class="fs-4 text-primary">${page.imageCount || 0}</div>
+                                                                    <small class="text-muted">Images totales</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="text-center">
+                                                                    <div class="fs-4 text-${page.imagesWithoutAlt > 0 ? 'danger' : 'success'}">${page.imagesWithoutAlt || 0}</div>
+                                                                    <small class="text-muted">Sans alt</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <hr>
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <div class="text-center">
+                                                                    <div class="fs-4 text-success">${page.internalLinks || 0}</div>
+                                                                    <small class="text-muted">Liens internes</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="text-center">
+                                                                    <div class="fs-4 text-info">${page.externalLinks || 0}</div>
+                                                                    <small class="text-muted">Liens externes</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Onglet Recommandations -->
+                                    <div class="tab-pane fade" id="recommendations" role="tabpanel">
+                                        ${recommendations.length === 0 ? 
+                                            '<div class="alert alert-success"><i class="fas fa-thumbs-up me-2"></i>Félicitations ! Aucune amélioration critique détectée.</div>' :
+                                            Object.keys(groupedRecommendations).map(category => `
+                                                <div class="mb-4">
+                                                    <h6 class="text-primary mb-3">
+                                                        <i class="fas fa-${
+                                                            category === 'SEO On-Page' ? 'search' :
+                                                            category === 'Performance' ? 'tachometer-alt' :
+                                                            category === 'Structure' ? 'sitemap' :
+                                                            category === 'Contenu' ? 'file-alt' :
+                                                            category === 'Accessibilité' ? 'universal-access' : 'cog'
+                                                        } me-2"></i>${category}
+                                                    </h6>
+                                                    ${groupedRecommendations[category].map(rec => `
+                                                        <div class="card border-0 shadow-sm mb-3">
+                                                            <div class="card-body">
+                                                                <div class="d-flex align-items-start">
+                                                                    <div class="me-3">
+                                                                        <span class="badge ${
+                                                                            rec.type === 'critical' ? 'bg-danger' :
+                                                                            rec.type === 'warning' ? 'bg-warning' : 'bg-info'
+                                                                        }">
+                                                                            ${rec.impact}
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="flex-grow-1">
+                                                                        <h6 class="mb-1 text-${rec.type === 'critical' ? 'danger' : rec.type === 'warning' ? 'warning' : 'info'}">
+                                                                            ${rec.issue}
+                                                                        </h6>
+                                                                        <p class="mb-0 text-muted">${rec.recommendation}</p>
+                                                                    </div>
+                                                                    <div class="ms-3">
+                                                                        <i class="fas fa-${
+                                                                            rec.type === 'critical' ? 'exclamation-circle text-danger' :
+                                                                            rec.type === 'warning' ? 'exclamation-triangle text-warning' : 'info-circle text-info'
+                                                                        }"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    `).join('')}
+                                                </div>
+                                            `).join('')
+                                        }
+                                    </div>
+                                    
+                                    <!-- Onglet Technique -->
+                                    <div class="tab-pane fade" id="technical" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="card border-0 shadow-sm">
+                                                    <div class="card-header bg-secondary text-white">
+                                                        <h6 class="mb-0"><i class="fas fa-server me-2"></i>Informations techniques</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <table class="table table-borderless table-sm">
+                                                            <tr>
+                                                                <td><strong>Code de statut :</strong></td>
+                                                                <td><span class="badge bg-${page.status.toString().startsWith('2') ? 'success' : 'danger'}">${page.status}</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong>Temps de réponse :</strong></td>
+                                                                <td>${page.responseTime}ms</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong>Date d'analyse :</strong></td>
+                                                                <td>${new Date(page.crawledAt).toLocaleString()}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong>Longueur URL :</strong></td>
+                                                                <td>${page.url.length} caractères</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-6">
+                                                <div class="card border-0 shadow-sm">
+                                                    <div class="card-header bg-dark text-white">
+                                                        <h6 class="mb-0"><i class="fas fa-bug me-2"></i>Problèmes détectés</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        ${page.issues.length === 0 ? 
+                                                            '<p class="text-success mb-0"><i class="fas fa-check me-2"></i>Aucun problème technique détecté</p>' :
+                                                            '<ul class="list-unstyled mb-0">' + 
+                                                            page.issues.map(issue => 
+                                                                `<li class="mb-2"><i class="fas fa-exclamation-triangle text-warning me-2"></i>${issue}</li>`
+                                                            ).join('') + 
+                                                            '</ul>'
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-light">
+                                <button type="button" class="btn btn-outline-primary" onclick="window.open('${page.url}', '_blank')">
+                                    <i class="fas fa-external-link-alt me-2"></i>Voir la page
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fas fa-times me-2"></i>Fermer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Supprimer l'ancien modal s'il existe
+            const existingModal = document.getElementById('pageDetailsModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            document.body.insertAdjacentHTML('beforeend', detailsHTML);
+            const modal = new bootstrap.Modal(document.getElementById('pageDetailsModal'));
+            modal.show();
+        }
+
+        function exportResults(format) {
+            if (!currentResults) {
+                showToast('Aucune analyse disponible', 'warning');
+                return;
+            }
+
+            if (format === 'json') {
+                const dataStr = JSON.stringify(currentResults, null, 2);
+                downloadFile(dataStr, `seo-audit-${currentResults.metadata.domain}-${Date.now()}.json`, 'application/json');
+            } else if (format === 'csv') {
+                const csv = convertToCSV(currentResults.pages);
+                downloadFile(csv, `seo-audit-${currentResults.metadata.domain}-${Date.now()}.csv`, 'text/csv');
+            } else if (format === 'pdf') {
+                generatePDFReport();
+                return; // Le message de succès est géré dans generatePDFReport
+            }
+
+            showToast(`Export ${format.toUpperCase()} généré avec succès!`, 'success');
+        }
+
+        function convertToCSV(pages) {
+            const headers = ['URL', 'Statut', 'Temps de réponse (ms)', 'Titre', 'Longueur titre', 'Meta Description', 'Longueur meta desc', 'H1', 'H2', 'H3', 'Images', 'Images sans alt', 'Liens internes', 'Liens externes', 'Nombre de mots', 'Problèmes'];
+            
+            const csvContent = [
+                headers.join(','),
+                ...pages.map(page => [
+                    `"${page.url}"`,
+                    page.status,
+                    page.responseTime,
+                    `"${(page.title || '').replace(/"/g, '""')}"`,
+                    page.titleLen || 0,
+                    `"${(page.metaDesc || '').replace(/"/g, '""')}"`,
+                    page.metaDescLen || 0,
+                    page.h1Count || 0,
+                    page.h2Count || 0,
+                    page.h3Count || 0,
+                    page.imageCount || 0,
+                    page.imagesWithoutAlt || 0,
+                    page.internalLinks || 0,
+                    page.externalLinks || 0,
+                    page.wordCount || 0,
+                    `"${page.issues.join('; ').replace(/"/g, '""')}"`
+                ].join(','))
+            ].join('\n');
+
+            return csvContent;
+        }
+
+        // Génération du rapport PDF
+        async function generatePDFReport() {
+            if (!currentResults) return;
+            
+            showToast('Génération du rapport PDF en cours...', 'info');
+            
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                // Configuration
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const margin = 20;
+                const usableWidth = pageWidth - (2 * margin);
+                let currentY = margin;
+                
+                // Couleurs
+                const colors = {
+                    primary: [13, 110, 253],
+                    success: [25, 135, 84],
+                    warning: [255, 193, 7],
+                    danger: [220, 53, 69],
+                    gray: [108, 117, 125],
+                    light: [248, 249, 250]
+                };
+                
+                // Fonction pour ajouter une nouvelle page si nécessaire
+                const checkPageBreak = (neededHeight) => {
+                    if (currentY + neededHeight > pageHeight - margin) {
+                        pdf.addPage();
+                        currentY = margin;
+                        return true;
+                    }
+                    return false;
+                };
+                
+                // Fonction d'en-tête de page
+                const addPageHeader = () => {
+                    pdf.setFillColor(...colors.primary);
+                    pdf.rect(0, 0, pageWidth, 15, 'F');
+                    pdf.setTextColor(255, 255, 255);
+                    pdf.setFontSize(10);
+                    pdf.text('Rapport d\'Audit SEO', margin, 10);
+                    pdf.text(`${currentResults.metadata.domain}`, pageWidth - margin, 10, { align: 'right' });
+                    pdf.setTextColor(0, 0, 0);
+                    currentY = 25;
+                };
+                
+                // En-tête principal
+                pdf.setFillColor(...colors.primary);
+                pdf.rect(0, 0, pageWidth, 40, 'F');
+                
+                pdf.setTextColor(255, 255, 255);
+                pdf.setFontSize(24);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Rapport d\'Audit SEO', margin, 25);
+                
+                pdf.setFontSize(14);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text(`Domaine analysé: ${currentResults.metadata.domain}`, margin, 35);
+                
+                currentY = 55;
+                pdf.setTextColor(0, 0, 0);
+                
+                // Informations générales
+                pdf.setFontSize(16);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Informations Générales', margin, currentY);
+                currentY += 10;
+                
+                pdf.setFontSize(10);
+                pdf.setFont('helvetica', 'normal');
+                
+                const analysisDate = new Date(currentResults.metadata.analysis_date).toLocaleString('fr-FR');
+                const infoLines = [
+                    `Date d'analyse: ${analysisDate}`,
+                    `Pages analysées: ${currentResults.summary.totalPages}`,
+                    `Pages avec problèmes: ${currentResults.summary.pagesWithIssues}`,
+                    `Temps de réponse moyen: ${currentResults.summary.avgResponseTime}ms`,
+                    `Total des problèmes: ${currentResults.summary.totalIssues}`
+                ];
+                
+                infoLines.forEach(line => {
+                    pdf.text(line, margin, currentY);
+                    currentY += 6;
+                });
+                
+                currentY += 10;
+                
+                // Résumé des scores
+                checkPageBreak(50);
+                
+                pdf.setFontSize(16);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Résumé des Performances', margin, currentY);
+                currentY += 15;
+                
+                // Calculer les scores moyens
+                let totalScore = 0;
+                let scoresCount = 0;
+                const categoryScores = {
+                    'Excellent (80-100)': 0,
+                    'Bon (60-79)': 0,
+                    'Moyen (40-59)': 0,
+                    'Faible (0-39)': 0
+                };
+                
+                currentResults.pages.forEach(page => {
+                    const { score } = calculateSEOScore(page);
+                    totalScore += score;
+                    scoresCount++;
+                    
+                    if (score >= 80) categoryScores['Excellent (80-100)']++;
+                    else if (score >= 60) categoryScores['Bon (60-79)']++;
+                    else if (score >= 40) categoryScores['Moyen (40-59)']++;
+                    else categoryScores['Faible (0-39)']++;
+                });
+                
+                const averageScore = Math.round(totalScore / scoresCount);
+                
+                // Score moyen global avec couleur
+                const scoreColor = averageScore >= 80 ? colors.success : 
+                                 averageScore >= 60 ? colors.warning : colors.danger;
+                
+                pdf.setFillColor(...scoreColor);
+                pdf.rect(margin, currentY, 50, 20, 'F');
+                pdf.setTextColor(255, 255, 255);
+                pdf.setFontSize(20);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text(`${averageScore}/100`, margin + 25, currentY + 13, { align: 'center' });
+                
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFontSize(12);
+                pdf.text('Score SEO Moyen', margin + 55, currentY + 8);
+                pdf.setFontSize(10);
+                pdf.text('Basé sur l\'analyse de toutes les pages', margin + 55, currentY + 15);
+                
+                currentY += 35;
+                
+                // Tableau des répartitions de scores
+                const scoreData = Object.entries(categoryScores).map(([category, count]) => [
+                    category,
+                    count.toString(),
+                    `${Math.round((count / scoresCount) * 100)}%`
+                ]);
+                
+                pdf.autoTable({
+                    startY: currentY,
+                    head: [['Catégorie de Score', 'Nombre de Pages', 'Pourcentage']],
+                    body: scoreData,
+                    theme: 'grid',
+                    headStyles: {
+                        fillColor: colors.primary,
+                        textColor: 255,
+                        fontStyle: 'bold'
+                    },
+                    margin: { left: margin, right: margin },
+                    tableWidth: usableWidth
+                });
+                
+                currentY = pdf.lastAutoTable.finalY + 15;
+                
+                // Problèmes les plus fréquents
+                checkPageBreak(50);
+                
+                pdf.setFontSize(16);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Problèmes les Plus Fréquents', margin, currentY);
+                currentY += 15;
+                
+                const issueStats = {};
+                currentResults.pages.forEach(page => {
+                    page.issues.forEach(issue => {
+                        issueStats[issue] = (issueStats[issue] || 0) + 1;
+                    });
+                });
+                
+                const topIssues = Object.entries(issueStats)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 10)
+                    .map(([issue, count]) => [issue, count.toString(), `${Math.round((count / currentResults.pages.length) * 100)}%`]);
+                
+                if (topIssues.length > 0) {
+                    pdf.autoTable({
+                        startY: currentY,
+                        head: [['Problème', 'Occurrences', '% Pages Affectées']],
+                        body: topIssues,
+                        theme: 'grid',
+                        headStyles: {
+                            fillColor: colors.danger,
+                            textColor: 255,
+                            fontStyle: 'bold'
+                        },
+                        margin: { left: margin, right: margin },
+                        tableWidth: usableWidth
+                    });
+                    
+                    currentY = pdf.lastAutoTable.finalY + 15;
+                } else {
+                    pdf.setFontSize(10);
+                    pdf.text('Aucun problème détecté !', margin, currentY);
+                    currentY += 15;
+                }
+                
+                // Détail des pages - par batch pour éviter les coupures
+                checkPageBreak(30);
+                
+                pdf.setFontSize(16);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Détail des Pages Analysées', margin, currentY);
+                currentY += 15;
+                
+                // Diviser les pages en groupes de 10 pour éviter les tableaux trop longs
+                const pageGroups = [];
+                for (let i = 0; i < currentResults.pages.length; i += 10) {
+                    pageGroups.push(currentResults.pages.slice(i, i + 10));
+                }
+                
+                pageGroups.forEach((pageGroup, groupIndex) => {
+                    checkPageBreak(80); // Vérifier qu'on a assez de place pour le tableau
+                    
+                    if (groupIndex > 0) {
+                        pdf.setFontSize(14);
+                        pdf.setFont('helvetica', 'bold');
+                        pdf.text(`Pages ${groupIndex * 10 + 1} à ${Math.min((groupIndex + 1) * 10, currentResults.pages.length)}`, margin, currentY);
+                        currentY += 10;
+                    }
+                    
+                    const pageTableData = pageGroup.map(page => {
+                        const { score } = calculateSEOScore(page);
+                        const url = page.url.length > 40 ? page.url.substring(0, 37) + '...' : page.url;
+                        const title = (page.title || 'Sans titre').length > 30 ? 
+                                     (page.title || 'Sans titre').substring(0, 27) + '...' : 
+                                     (page.title || 'Sans titre');
+                        
+                        return [
+                            url,
+                            page.status.toString(),
+                            `${page.responseTime}ms`,
+                            title,
+                            `${score}/100`,
+                            page.issues.length.toString()
+                        ];
+                    });
+                    
+                    pdf.autoTable({
+                        startY: currentY,
+                        head: [['URL', 'Statut', 'Temps', 'Titre', 'Score', 'Probl.']],
+                        body: pageTableData,
+                        theme: 'grid',
+                        headStyles: {
+                            fillColor: colors.primary,
+                            textColor: 255,
+                            fontStyle: 'bold',
+                            fontSize: 9
+                        },
+                        bodyStyles: {
+                            fontSize: 8
+                        },
+                        margin: { left: margin, right: margin },
+                        tableWidth: usableWidth,
+                        columnStyles: {
+                            0: { cellWidth: 45 }, // URL
+                            1: { cellWidth: 15 }, // Statut
+                            2: { cellWidth: 20 }, // Temps
+                            3: { cellWidth: 40 }, // Titre
+                            4: { cellWidth: 20 }, // Score
+                            5: { cellWidth: 15 }  // Problèmes
+                        }
+                    });
+                    
+                    currentY = pdf.lastAutoTable.finalY + 10;
+                });
+                
+                // Détails individuels de chaque page
+                pdf.addPage();
+                currentY = margin;
+                
+                pdf.setFontSize(18);
+                pdf.setFont('helvetica', 'bold');
+                pdf.setTextColor(...colors.primary);
+                pdf.text('Analyse Détaillée des Pages', margin, currentY);
+                pdf.setTextColor(0, 0, 0);
+                currentY += 20;
+                
+                // Traiter chaque page individuellement
+                currentResults.pages.forEach((page, pageIndex) => {
+                    const pageScore = calculateSEOScore(page);
+                    const pageRecommendations = generateRecommendations(page);
+                    
+                    // Vérifier s'il faut une nouvelle page (besoin d'environ 100mm pour une page complète)
+                    checkPageBreak(100);
+                    
+                    // En-tête de page
+                    pdf.setFillColor(...colors.light);
+                    pdf.rect(margin - 5, currentY - 5, usableWidth + 10, 15, 'F');
+                    
+                    pdf.setFontSize(14);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.setTextColor(...colors.primary);
+                    pdf.text(`Page ${pageIndex + 1}: ${page.title || 'Sans titre'}`, margin, currentY + 5);
+                    
+                    pdf.setTextColor(0, 0, 0);
+                    currentY += 20;
+                    
+                    // URL avec lien cliquable
+                    pdf.setFontSize(10);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.setTextColor(...colors.gray);
+                    const displayUrl = page.url.length > 80 ? page.url.substring(0, 77) + '...' : page.url;
+                    pdf.textWithLink(displayUrl, margin, currentY, { url: page.url });
+                    currentY += 12;
+                    
+                    pdf.setTextColor(0, 0, 0);
+                    
+                    // Score global de la page avec barre colorée
+                    const scoreColor = pageScore.score >= 80 ? colors.success : 
+                                      pageScore.score >= 60 ? colors.warning : colors.danger;
+                    
+                    pdf.setFillColor(...scoreColor);
+                    pdf.rect(margin, currentY, 30, 12, 'F');
+                    pdf.setTextColor(255, 255, 255);
+                    pdf.setFontSize(12);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text(`${pageScore.score}/100`, margin + 15, currentY + 8, { align: 'center' });
+                    
+                    pdf.setTextColor(0, 0, 0);
+                    pdf.setFontSize(10);
+                    pdf.text('Score SEO', margin + 35, currentY + 8);
+                    currentY += 20;
+                    
+                    // Informations techniques en colonnes
+                    const leftCol = margin;
+                    const rightCol = margin + (usableWidth / 2);
+                    const startY = currentY;
+                    
+                    // Colonne gauche - Informations générales
+                    pdf.setFontSize(11);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text('Informations Générales', leftCol, currentY);
+                    currentY += 8;
+                    
+                    pdf.setFontSize(9);
+                    pdf.setFont('helvetica', 'normal');
+                    
+                    const leftInfo = [
+                        `Code HTTP: ${page.status}`,
+                        `Temps de réponse: ${page.responseTime}ms`,
+                        `Nombre de mots: ${page.wordCount || 'N/A'}`,
+                        `Images: ${page.imageCount || 0} (${page.imagesWithoutAlt || 0} sans alt)`,
+                        `Liens internes: ${page.internalLinks || 0}`,
+                        `Liens externes: ${page.externalLinks || 0}`
+                    ];
+                    
+                    leftInfo.forEach(info => {
+                        pdf.text(`• ${info}`, leftCol + 2, currentY);
+                        currentY += 5;
+                    });
+                    
+                    // Colonne droite - Structure des titres
+                    currentY = startY;
+                    pdf.setFontSize(11);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text('Structure des Titres', rightCol, currentY);
+                    currentY += 8;
+                    
+                    pdf.setFontSize(9);
+                    pdf.setFont('helvetica', 'normal');
+                    
+                    const rightInfo = [
+                        `Titres H1: ${page.h1Count || 0}`,
+                        `Titres H2: ${page.h2Count || 0}`,
+                        `Titres H3: ${page.h3Count || 0}`,
+                        `Titre (${page.titleLen || 0} car.): ${page.title ? (page.title.length > 40 ? page.title.substring(0, 37) + '...' : page.title) : 'Aucun'}`,
+                        `Meta desc. (${page.metaDescLen || 0} car.): ${page.metaDesc ? (page.metaDesc.length > 40 ? page.metaDesc.substring(0, 37) + '...' : page.metaDesc) : 'Aucune'}`
+                    ];
+                    
+                    rightInfo.forEach(info => {
+                        pdf.text(`• ${info}`, rightCol + 2, currentY);
+                        currentY += 5;
+                    });
+                    
+                    currentY = Math.max(currentY, startY + 40); // Assurer un espacement minimum
+                    
+                    // Score détaillé par critère
+                    pdf.setFontSize(11);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text('Détail du Score', margin, currentY);
+                    currentY += 10;
+                    
+                    const criteriaData = [
+                        ['Titre', `${pageScore.checks.title}/20`, pageScore.checks.title >= 15 ? '✓ Excellent' : pageScore.checks.title >= 10 ? '⚠ Moyen' : '✗ Faible'],
+                        ['Meta Description', `${pageScore.checks.metaDesc}/15`, pageScore.checks.metaDesc >= 12 ? '✓ Excellent' : pageScore.checks.metaDesc >= 8 ? '⚠ Moyen' : '✗ Faible'],
+                        ['Structure H1', `${pageScore.checks.h1}/15`, pageScore.checks.h1 >= 12 ? '✓ Excellent' : pageScore.checks.h1 >= 7 ? '⚠ Moyen' : '✗ Faible'],
+                        ['Contenu', `${pageScore.checks.content}/20`, pageScore.checks.content >= 15 ? '✓ Excellent' : pageScore.checks.content >= 10 ? '⚠ Moyen' : '✗ Faible'],
+                        ['Images', `${pageScore.checks.images}/15`, pageScore.checks.images >= 12 ? '✓ Excellent' : pageScore.checks.images >= 8 ? '⚠ Moyen' : '✗ Faible'],
+                        ['Performance', `${pageScore.checks.performance}/15`, pageScore.checks.performance >= 12 ? '✓ Excellent' : pageScore.checks.performance >= 7 ? '⚠ Moyen' : '✗ Faible']
+                    ];
+                    
+                    pdf.autoTable({
+                        startY: currentY,
+                        head: [['Critère', 'Score', 'État']],
+                        body: criteriaData,
+                        theme: 'grid',
+                        headStyles: {
+                            fillColor: colors.primary,
+                            textColor: 255,
+                            fontStyle: 'bold',
+                            fontSize: 9
+                        },
+                        bodyStyles: {
+                            fontSize: 8
+                        },
+                        margin: { left: margin, right: margin },
+                        tableWidth: usableWidth * 0.7,
+                        columnStyles: {
+                            0: { cellWidth: 30 },
+                            1: { cellWidth: 20, halign: 'center' },
+                            2: { cellWidth: 25 }
+                        }
+                    });
+                    
+                    currentY = pdf.lastAutoTable.finalY + 10;
+                    
+                    // Recommandations spécifiques pour cette page
+                    if (pageRecommendations.length > 0) {
+                        pdf.setFontSize(11);
+                        pdf.setFont('helvetica', 'bold');
+                        pdf.text(`Recommandations (${pageRecommendations.length})`, margin, currentY);
+                        currentY += 8;
+                        
+                        // Grouper par priorité et type
+                        const criticalRecs = pageRecommendations.filter(r => r.type === 'critical');
+                        const warningRecs = pageRecommendations.filter(r => r.type === 'warning');
+                        const infoRecs = pageRecommendations.filter(r => r.type === 'info');
+                        
+                        pdf.setFontSize(9);
+                        pdf.setFont('helvetica', 'normal');
+                        
+                        // Recommandations critiques
+                        if (criticalRecs.length > 0) {
+                            pdf.setTextColor(...colors.danger);
+                            pdf.text('• CRITIQUE:', margin + 2, currentY);
+                            pdf.setTextColor(0, 0, 0);
+                            currentY += 5;
+                            
+                            criticalRecs.forEach(rec => {
+                                const lines = pdf.splitTextToSize(`  ${rec.issue}: ${rec.recommendation}`, usableWidth - 10);
+                                lines.forEach(line => {
+                                    pdf.text(line, margin + 4, currentY);
+                                    currentY += 4;
+                                });
+                                currentY += 1;
+                            });
+                        }
+                        
+                        // Recommandations importantes
+                        if (warningRecs.length > 0) {
+                            pdf.setTextColor(...colors.warning);
+                            pdf.text('• IMPORTANT:', margin + 2, currentY);
+                            pdf.setTextColor(0, 0, 0);
+                            currentY += 5;
+                            
+                            warningRecs.forEach(rec => {
+                                const lines = pdf.splitTextToSize(`  ${rec.issue}: ${rec.recommendation}`, usableWidth - 10);
+                                lines.forEach(line => {
+                                    pdf.text(line, margin + 4, currentY);
+                                    currentY += 4;
+                                });
+                                currentY += 1;
+                            });
+                        }
+                        
+                        // Recommandations mineures
+                        if (infoRecs.length > 0) {
+                            pdf.setTextColor(...colors.gray);
+                            pdf.text('• AMÉLIORATION:', margin + 2, currentY);
+                            pdf.setTextColor(0, 0, 0);
+                            currentY += 5;
+                            
+                            infoRecs.forEach(rec => {
+                                const lines = pdf.splitTextToSize(`  ${rec.issue}: ${rec.recommendation}`, usableWidth - 10);
+                                lines.forEach(line => {
+                                    pdf.text(line, margin + 4, currentY);
+                                    currentY += 4;
+                                });
+                                currentY += 1;
+                            });
+                        }
+                    } else {
+                        pdf.setFontSize(10);
+                        pdf.setTextColor(...colors.success);
+                        pdf.text('✓ Aucune recommandation spécifique - Page optimisée !', margin, currentY);
+                        pdf.setTextColor(0, 0, 0);
+                        currentY += 8;
+                    }
+                    
+                    // Problèmes détectés
+                    if (page.issues.length > 0) {
+                        currentY += 5;
+                        pdf.setFontSize(10);
+                        pdf.setFont('helvetica', 'bold');
+                        pdf.setTextColor(...colors.danger);
+                        pdf.text(`Problèmes Détectés (${page.issues.length})`, margin, currentY);
+                        pdf.setTextColor(0, 0, 0);
+                        currentY += 8;
+                        
+                        pdf.setFontSize(8);
+                        pdf.setFont('helvetica', 'normal');
+                        
+                        page.issues.forEach(issue => {
+                            const lines = pdf.splitTextToSize(`• ${issue}`, usableWidth - 5);
+                            lines.forEach(line => {
+                                pdf.text(line, margin + 2, currentY);
+                                currentY += 4;
+                            });
+                        });
+                    }
+                    
+                    // Ligne de séparation avant la page suivante
+                    if (pageIndex < currentResults.pages.length - 1) {
+                        currentY += 10;
+                        pdf.setDrawColor(...colors.gray);
+                        pdf.line(margin, currentY, pageWidth - margin, currentY);
+                        currentY += 15;
+                    }
+                });
+                
+                // Recommandations générales
+                pdf.addPage();
+                currentY = margin;
+                
+                pdf.setFontSize(16);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('Recommandations Générales', margin, currentY);
+                currentY += 15;
+                
+                const generalRecommendations = [];
+                
+                if (currentResults.summary.pagesWithIssues > 0) {
+                    generalRecommendations.push(
+                        `• Corriger les problèmes sur ${currentResults.summary.pagesWithIssues} page(s)`,
+                        `• Focus sur les problèmes les plus fréquents identifiés ci-dessus`
+                    );
+                }
+                
+                if (currentResults.summary.avgResponseTime > 2000) {
+                    generalRecommendations.push(
+                        `• Améliorer les performances (temps moyen: ${currentResults.summary.avgResponseTime}ms)`
+                    );
+                }
+                
+                if (averageScore < 70) {
+                    generalRecommendations.push(
+                        `• Le score SEO moyen (${averageScore}/100) peut être amélioré`,
+                        `• Prioriser les pages avec les scores les plus faibles`
+                    );
+                }
+                
+                generalRecommendations.push(
+                    `• Ré-analyser régulièrement pour suivre les améliorations`,
+                    `• Utiliser la vue détaillée de chaque page pour des conseils spécifiques`
+                );
+                
+                pdf.setFontSize(10);
+                pdf.setFont('helvetica', 'normal');
+                
+                generalRecommendations.forEach(recommendation => {
+                    checkPageBreak(8);
+                    pdf.text(recommendation, margin, currentY);
+                    currentY += 6;
+                });
+                
+                // Pied de page sur toutes les pages
+                const totalPages = pdf.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+                    pdf.setFontSize(8);
+                    pdf.setTextColor(...colors.gray);
+                    pdf.text(
+                        `Généré le ${new Date().toLocaleDateString('fr-FR')} par SEO Audit Tool`,
+                        margin,
+                        pageHeight - 10
+                    );
+                    pdf.text(
+                        `Page ${i} sur ${totalPages}`,
+                        pageWidth - margin,
+                        pageHeight - 10,
+                        { align: 'right' }
+                    );
+                }
+                
+                // Télécharger le PDF
+                const fileName = `rapport-seo-${currentResults.metadata.domain.replace(/[^a-zA-Z0-9]/g, '_')}-${new Date().toISOString().split('T')[0]}.pdf`;
+                pdf.save(fileName);
+                
+                showToast('Rapport PDF généré avec succès!', 'success');
+                
+            } catch (error) {
+                console.error('Erreur lors de la génération du PDF:', error);
+                showToast('Erreur lors de la génération du PDF: ' + error.message, 'danger');
+            }
+        }
+        
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function saveAnalysisLocally(analysisData) {
+            try {
+                let history = JSON.parse(localStorage.getItem('seo_analysis_history') || '[]');
+                history.unshift(analysisData); // Ajouter au début
+                history = history.slice(0, 10); // Garder seulement les 10 dernières
+                localStorage.setItem('seo_analysis_history', JSON.stringify(history));
+            } catch (error) {
+                console.error('Erreur lors de la sauvegarde:', error);
+            }
+        }
+
+        function loadHistory() {
+            try {
+                const history = JSON.parse(localStorage.getItem('seo_analysis_history') || '[]');
+                const container = document.getElementById('historyContent');
+                
+                if (history.length === 0) {
+                    container.innerHTML = '<p class="text-muted">Aucune analyse dans l\'historique.</p>';
+                    return;
+                }
+
+                container.innerHTML = history.map((analysis, index) => `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5><i class="fas fa-globe me-2"></i>${analysis.metadata.domain}</h5>
+                                    <p class="text-muted mb-2">
+                                        <i class="fas fa-calendar me-1"></i>${new Date(analysis.metadata.analysis_date).toLocaleString()}
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <small class="text-muted">Pages analysées</small><br>
+                                            <strong>${analysis.summary.totalPages}</strong>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <small class="text-muted">Pages avec problèmes</small><br>
+                                            <strong class="text-warning">${analysis.summary.pagesWithIssues}</strong>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <small class="text-muted">Temps moyen</small><br>
+                                            <strong>${analysis.summary.avgResponseTime}ms</strong>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <small class="text-muted">Total problèmes</small><br>
+                                            <strong class="text-danger">${analysis.summary.totalIssues}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <button class="btn btn-outline-primary btn-sm me-2" onclick="loadAnalysisFromHistory(${index})">
+                                        <i class="fas fa-eye me-1"></i>Voir
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm me-2" onclick="exportAnalysisFromHistory(${index}, 'json')">
+                                        <i class="fas fa-download me-1"></i>JSON
+                                    </button>
+                                    <button class="btn btn-outline-info btn-sm me-2" onclick="exportAnalysisFromHistory(${index}, 'csv')">
+                                        <i class="fas fa-table me-1"></i>CSV
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm me-2" onclick="exportAnalysisFromHistory(${index}, 'pdf')">
+                                        <i class="fas fa-file-pdf me-1"></i>PDF
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="deleteAnalysisFromHistory(${index})">
+                                        <i class="fas fa-trash me-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Erreur lors du chargement de l\'historique:', error);
+                document.getElementById('historyContent').innerHTML = '<p class="text-danger">Erreur lors du chargement de l\'historique.</p>';
+            }
+        }
+
+        function loadAnalysisFromHistory(index) {
+            try {
+                const history = JSON.parse(localStorage.getItem('seo_analysis_history') || '[]');
+                if (history[index]) {
+                    currentResults = history[index];
+                    showResults();
+                    showToast('Analyse chargée depuis l\'historique', 'success');
+                }
+            } catch (error) {
+                showToast('Erreur lors du chargement', 'danger');
+            }
+        }
+
+        function exportAnalysisFromHistory(index, format) {
+            try {
+                const history = JSON.parse(localStorage.getItem('seo_analysis_history') || '[]');
+                if (history[index]) {
+                    const analysis = history[index];
+                    const previousResults = currentResults; // Sauvegarder l'état actuel
+                    currentResults = analysis; // Temporairement changer les résultats
+                    
+                    if (format === 'json') {
+                        const dataStr = JSON.stringify(analysis, null, 2);
+                        downloadFile(dataStr, `seo-audit-${analysis.metadata.domain}-${Date.now()}.json`, 'application/json');
+                    } else if (format === 'csv') {
+                        const csv = convertToCSV(analysis.pages);
+                        downloadFile(csv, `seo-audit-${analysis.metadata.domain}-${Date.now()}.csv`, 'text/csv');
+                    } else if (format === 'pdf') {
+                        generatePDFReport();
+                        currentResults = previousResults; // Restaurer l'état
+                        return;
+                    }
+                    
+                    currentResults = previousResults; // Restaurer l'état
+                    showToast(`Export ${format.toUpperCase()} généré!`, 'success');
+                }
+            } catch (error) {
+                showToast('Erreur lors de l\'export', 'danger');
+            }
+        }
+
+        function deleteAnalysisFromHistory(index) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette analyse ?')) {
+                try {
+                    let history = JSON.parse(localStorage.getItem('seo_analysis_history') || '[]');
+                    history.splice(index, 1);
+                    localStorage.setItem('seo_analysis_history', JSON.stringify(history));
+                    loadHistory();
+                    showToast('Analyse supprimée', 'success');
+                } catch (error) {
+                    showToast('Erreur lors de la suppression', 'danger');
+                }
+            }
+        }
+
+        function clearHistory() {
+            if (confirm('Êtes-vous sûr de vouloir vider tout l\'historique ?')) {
+                localStorage.removeItem('seo_analysis_history');
+                loadHistory();
+                showToast('Historique vidé', 'success');
+            }
+        }
+
+        function showSection(sectionName) {
+            // Masquer toutes les sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section demandée
+            const targetSection = document.getElementById(sectionName);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Charger l'historique si nécessaire
+            if (sectionName === 'history') {
+                loadHistory();
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const toastElement = document.getElementById('liveToast');
+            const toastBody = document.getElementById('toastBody');
+            
+            toastBody.textContent = message;
+            
+            // Changer la couleur selon le type
+            toastElement.className = `toast bg-${type === 'danger' ? 'danger' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info'} text-white`;
+            
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Validation de l'URL en temps réel
+            document.getElementById('domain').addEventListener('input', function(e) {
+                const url = e.target.value;
+                const submitBtn = document.getElementById('submitBtn');
+                
+                if (url && !url.match(/^https?:\/\/.+/)) {
+                    e.target.classList.add('is-invalid');
+                    submitBtn.disabled = true;
+                } else {
+                    e.target.classList.remove('is-invalid');
+                    submitBtn.disabled = false;
+                }
+            });
+
+            // Vérifier s'il y a une analyse récente dans l'historique
+            const history = JSON.parse(localStorage.getItem('seo_analysis_history') || '[]');
+            if (history.length > 0) {
+                showToast('Analyse précédente disponible dans l\'historique', 'info');
+            }
+        });
+    </script>
+</body>
+</html>

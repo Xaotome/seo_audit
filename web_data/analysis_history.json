@@ -1,0 +1,282 @@
+[
+  {
+    "id": "audit_1756327308",
+    "domain": "https://www.appel-innovation.be",
+    "date": "2025-08-27T22:41:48.315862",
+    "summary": {
+      "total_pages": 20,
+      "pages_with_issues": 20,
+      "avg_response_time": 73.35,
+      "total_issues": 54,
+      "top_issues": [
+        [
+          "URL canonique manquante",
+          17
+        ],
+        [
+          "Meta description manquante",
+          10
+        ],
+        [
+          "Meta description trop longue (> 160 caractères)",
+          5
+        ],
+        [
+          "Titre trop long (> 65 caractères)",
+          5
+        ],
+        [
+          "Titre trop court (< 10 caractères)",
+          3
+        ],
+        [
+          "Nombre de mots insuffisant (< 150 mots)",
+          3
+        ],
+        [
+          "URL canonique externe",
+          2
+        ],
+        [
+          "1 images sans texte alt",
+          2
+        ],
+        [
+          "Balises H1 multiples (2)",
+          2
+        ],
+        [
+          "Erreur d'analyse: 'NoneType' object has no attribute 'strip'",
+          1
+        ]
+      ],
+      "status_codes": {
+        "200": 20
+      }
+    }
+  },
+  {
+    "id": "audit_1756326665",
+    "domain": "https://www.appel-innovation.be",
+    "date": "2025-08-27T22:31:05.019126",
+    "summary": {
+      "total_pages": 20,
+      "pages_with_issues": 20,
+      "avg_response_time": 92.19999999999999,
+      "total_issues": 54,
+      "top_issues": [
+        [
+          "URL canonique manquante",
+          17
+        ],
+        [
+          "Meta description manquante",
+          10
+        ],
+        [
+          "Meta description trop longue (> 160 caractères)",
+          5
+        ],
+        [
+          "Titre trop long (> 65 caractères)",
+          5
+        ],
+        [
+          "Nombre de mots insuffisant (< 150 mots)",
+          3
+        ],
+        [
+          "Titre trop court (< 10 caractères)",
+          3
+        ],
+        [
+          "1 images sans texte alt",
+          2
+        ],
+        [
+          "URL canonique externe",
+          2
+        ],
+        [
+          "Balises H1 multiples (2)",
+          2
+        ],
+        [
+          "Erreur d'analyse: 'NoneType' object has no attribute 'strip'",
+          1
+        ]
+      ],
+      "status_codes": {
+        "200": 20
+      }
+    }
+  },
+  {
+    "id": "audit_1756326120",
+    "domain": "https://www.appel-innovation.be",
+    "date": "2025-08-27T22:22:00.091597",
+    "summary": {
+      "total_pages": 20,
+      "pages_with_issues": 20,
+      "avg_response_time": 737.4,
+      "total_issues": 58,
+      "top_issues": [
+        [
+          "Missing canonical",
+          17
+        ],
+        [
+          "Missing meta description",
+          10
+        ],
+        [
+          "Title too long (> 65 chars)",
+          5
+        ],
+        [
+          "Meta description too long (> 160 chars)",
+          5
+        ],
+        [
+          "Title too short (< 10 chars)",
+          3
+        ],
+        [
+          "Low word count (< 150 words)",
+          3
+        ],
+        [
+          "Multiple H1 tags (2)",
+          2
+        ],
+        [
+          "Heading structure: Multiple H1 headings found (2)",
+          2
+        ],
+        [
+          "Non-self canonical",
+          2
+        ],
+        [
+          "1 images without alt text",
+          2
+        ]
+      ],
+      "status_codes": {
+        "200": 20
+      }
+    }
+  },
+  {
+    "id": "audit_1756325676",
+    "domain": "https://thmspcrx.dev",
+    "date": "2025-08-27T22:14:36.414301",
+    "summary": {
+      "total_pages": 14,
+      "pages_with_issues": 14,
+      "avg_response_time": 39.785714285714285,
+      "total_issues": 38,
+      "top_issues": [
+        [
+          "Missing meta description",
+          12
+        ],
+        [
+          "Low word count (< 150 words)",
+          7
+        ],
+        [
+          "1 images without alt text",
+          6
+        ],
+        [
+          "3 images without alt text",
+          4
+        ],
+        [
+          "Missing H1",
+          2
+        ],
+        [
+          "Heading structure: No H1 heading found",
+          2
+        ],
+        [
+          "7 images without alt text",
+          1
+        ],
+        [
+          "Meta description too long (> 160 chars)",
+          1
+        ],
+        [
+          "4 images without alt text",
+          1
+        ],
+        [
+          "5 images without alt text",
+          1
+        ]
+      ],
+      "status_codes": {
+        "200": 14
+      }
+    }
+  },
+  {
+    "id": "audit_1756325209",
+    "domain": "https://thmspcrx.dev",
+    "date": "2025-08-27T22:06:49.571844",
+    "summary": {
+      "total_pages": 14,
+      "pages_with_issues": 14,
+      "avg_response_time": 40.57142857142857,
+      "total_issues": 36,
+      "top_issues": [
+        [
+          "Missing meta description",
+          12
+        ],
+        [
+          "Low word count (< 150 words)",
+          7
+        ],
+        [
+          "1 images without alt text",
+          6
+        ],
+        [
+          "3 images without alt text",
+          4
+        ],
+        [
+          "Missing H1",
+          2
+        ],
+        [
+          "5 images without alt text",
+          1
+        ],
+        [
+          "Meta description too long (> 160 chars)",
+          1
+        ],
+        [
+          "4 images without alt text",
+          1
+        ],
+        [
+          "7 images without alt text",
+          1
+        ],
+        [
+          "Non-self canonical",
+          1
+        ]
+      ],
+      "status_codes": {
+        "200": 14
+      }
+    }
+  }
+]

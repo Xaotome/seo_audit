@@ -1,0 +1,456 @@
+{% extends "base.html" %}
+
+{% block title %}Détails de la page - SEO Audit Tool{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Navigation de retour -->
+        <div class="mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('index') }}">
+                            <i class="fas fa-home"></i> Accueil
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('view_results', analysis_id=analysis_id) }}">
+                            <i class="fas fa-chart-bar"></i> Résultats
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">Page {{ page_index + 1 }}</li>
+                </ol>
+            </nav>
+            
+            <!-- Navigation entre pages -->
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    {% if page_index > 0 %}
+                        <a href="{{ url_for('view_page_details', analysis_id=analysis_id, page_index=page_index-1) }}" 
+                           class="btn btn-outline-secondary">
+                            <i class="fas fa-chevron-left"></i> Page précédente
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="text-center">
+                    <span class="badge bg-primary fs-6">
+                        Page {{ page_index + 1 }} sur {{ total_pages }}
+                    </span>
+                </div>
+                <div>
+                    {% if page_index < total_pages - 1 %}
+                        <a href="{{ url_for('view_page_details', analysis_id=analysis_id, page_index=page_index+1) }}" 
+                           class="btn btn-outline-secondary">
+                            Page suivante <i class="fas fa-chevron-right"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- En-tête de la page -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h4 class="mb-1">
+                            <i class="fas fa-globe me-2"></i>Analyse détaillée
+                        </h4>
+                        <p class="mb-0 small">
+                            <i class="fas fa-calendar me-1"></i>{{ analysis_data.end_time.strftime('%d/%m/%Y à %H:%M') }}
+                        </p>
+                    </div>
+                    <div>
+                        {% if page_result.status == 200 %}
+                            <span class="badge bg-success fs-6">{{ page_result.status }}</span>
+                        {% elif page_result.status >= 400 %}
+                            <span class="badge bg-danger fs-6">{{ page_result.status }}</span>
+                        {% else %}
+                            <span class="badge bg-warning fs-6">{{ page_result.status }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-2">
+                    <strong class="me-2">URL :</strong>
+                    <a href="{{ page_result.url }}" target="_blank" class="text-decoration-none">
+                        {{ page_result.url }}
+                        <i class="fas fa-external-link-alt ms-1"></i>
+                    </a>
+                </div>
+                {% if page_result.issues %}
+                    <div class="alert alert-warning mt-3">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {{ page_result.issues|length }} problème(s) détecté(s)
+                        </h6>
+                        <ul class="mb-0">
+                            {% for issue in page_result.issues %}
+                                <li>{{ issue }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="alert alert-success mt-3">
+                        <i class="fas fa-check-circle me-2"></i>Aucun problème détecté sur cette page
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Métriques principales -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-2">
+                            <i class="fas fa-clock fa-2x 
+                                {% if page_result.response_ms > 3000 %}text-danger
+                                {% elif page_result.response_ms > 1000 %}text-warning
+                                {% else %}text-success{% endif %}"></i>
+                        </div>
+                        <h5>{{ page_result.response_ms or 'N/A' }}{% if page_result.response_ms %}ms{% endif %}</h5>
+                        <p class="text-muted small mb-0">Temps de réponse</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-2">
+                            <i class="fas fa-file-alt fa-2x 
+                                {% if page_result.html_size > 500000 %}text-warning
+                                {% else %}text-info{% endif %}"></i>
+                        </div>
+                        <h5>{{ "%.1f"|format(page_result.html_size / 1024) if page_result.html_size else 'N/A' }}{% if page_result.html_size %} KB{% endif %}</h5>
+                        <p class="text-muted small mb-0">Taille HTML</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-2">
+                            <i class="fas fa-font fa-2x 
+                                {% if page_result.word_count < 150 %}text-danger
+                                {% elif page_result.word_count < 300 %}text-warning
+                                {% else %}text-success{% endif %}"></i>
+                        </div>
+                        <h5>{{ page_result.word_count }}</h5>
+                        <p class="text-muted small mb-0">Nombre de mots</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="mb-2">
+                            <i class="fas fa-compress-arrows-alt fa-2x 
+                                {% if page_result.is_compressed %}text-success
+                                {% else %}text-warning{% endif %}"></i>
+                        </div>
+                        <h5>{{ 'Oui' if page_result.is_compressed else 'Non' }}</h5>
+                        <p class="text-muted small mb-0">Compression GZIP</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Détails SEO -->
+        <div class="row mb-4">
+            <!-- SEO On-page -->
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-search me-2"></i>SEO On-page
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Titre -->
+                        <div class="row mb-3">
+                            <div class="col-4"><strong>Titre :</strong></div>
+                            <div class="col-8">
+                                {% if page_result.title_len == 0 %}
+                                    <span class="badge bg-danger">Manquant</span>
+                                {% elif page_result.title_len < 30 or page_result.title_len > 60 %}
+                                    <span class="badge bg-warning">{{ page_result.title_len }} chars</span>
+                                {% else %}
+                                    <span class="badge bg-success">{{ page_result.title_len }} chars</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if page_result.title %}
+                            <div class="bg-light p-2 rounded mb-3">
+                                <small class="text-muted">Titre :</small><br>
+                                {{ page_result.title }}
+                            </div>
+                        {% endif %}
+
+                        <!-- Meta description -->
+                        <div class="row mb-3">
+                            <div class="col-4"><strong>Meta desc :</strong></div>
+                            <div class="col-8">
+                                {% if page_result.meta_desc_len == 0 %}
+                                    <span class="badge bg-danger">Manquant</span>
+                                {% elif page_result.meta_desc_len < 120 or page_result.meta_desc_len > 160 %}
+                                    <span class="badge bg-warning">{{ page_result.meta_desc_len }} chars</span>
+                                {% else %}
+                                    <span class="badge bg-success">{{ page_result.meta_desc_len }} chars</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if page_result.meta_desc %}
+                            <div class="bg-light p-2 rounded mb-3">
+                                <small class="text-muted">Meta description :</small><br>
+                                {{ page_result.meta_desc }}
+                            </div>
+                        {% endif %}
+
+                        <!-- H1 -->
+                        <div class="row mb-3">
+                            <div class="col-4"><strong>H1 :</strong></div>
+                            <div class="col-8">
+                                {% if page_result.h1_count == 0 %}
+                                    <span class="badge bg-danger">0</span>
+                                {% elif page_result.h1_count == 1 %}
+                                    <span class="badge bg-success">1</span>
+                                {% else %}
+                                    <span class="badge bg-warning">{{ page_result.h1_count }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Canonical -->
+                        {% if page_result.canonical %}
+                            <div class="row mb-3">
+                                <div class="col-4"><strong>Canonical :</strong></div>
+                                <div class="col-8">
+                                    <span class="badge bg-{{ 'success' if page_result.canonical_ok else 'danger' }}">
+                                        {{ 'OK' if page_result.canonical_ok else 'Erreur' }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="bg-light p-2 rounded mb-3">
+                                <small class="text-muted">URL canonique :</small><br>
+                                <a href="{{ page_result.canonical }}" target="_blank" class="text-break">
+                                    {{ page_result.canonical }}
+                                </a>
+                            </div>
+                        {% endif %}
+
+                        <!-- Meta robots -->
+                        {% if page_result.robots_meta %}
+                            <div class="row mb-3">
+                                <div class="col-4"><strong>Meta robots :</strong></div>
+                                <div class="col-8">
+                                    <span class="badge bg-info">{{ page_result.robots_meta }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <!-- Indexabilité -->
+                        <div class="row">
+                            <div class="col-4"><strong>Indexable :</strong></div>
+                            <div class="col-8">
+                                {% if page_result.noindex %}
+                                    <span class="badge bg-danger">Non (noindex)</span>
+                                {% else %}
+                                    <span class="badge bg-success">Oui</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liens et contenu -->
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-link me-2"></i>Liens et contenu
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Liens internes :</strong></div>
+                            <div class="col-6">
+                                <span class="badge bg-primary">{{ page_result.links_internal }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Liens externes :</strong></div>
+                            <div class="col-6">
+                                <span class="badge bg-secondary">{{ page_result.links_external }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Images sans alt :</strong></div>
+                            <div class="col-6">
+                                {% if page_result.img_no_alt > 0 %}
+                                    <span class="badge bg-warning">{{ page_result.img_no_alt }}</span>
+                                {% else %}
+                                    <span class="badge bg-success">0</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% if page_result.hreflang_count > 0 %}
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>Hreflang :</strong></div>
+                                <div class="col-6">
+                                    <span class="badge bg-info">{{ page_result.hreflang_count }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if page_result.structured_data_count > 0 %}
+                            <div class="row mb-3">
+                                <div class="col-6"><strong>Données structurées :</strong></div>
+                                <div class="col-6">
+                                    <span class="badge bg-success">{{ page_result.structured_data_count }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <!-- Chaîne de redirection -->
+                        {% if page_result.redirect_chain and page_result.redirect_chain|length > 1 %}
+                            <div class="mt-4">
+                                <h6>Chaîne de redirection :</h6>
+                                <div class="bg-light p-2 rounded">
+                                    {% for url in page_result.redirect_chain %}
+                                        <div class="mb-1">
+                                            <span class="badge bg-secondary">{{ loop.index }}</span>
+                                            <a href="{{ url }}" target="_blank" class="text-break ms-2">{{ url }}</a>
+                                        </div>
+                                        {% if not loop.last %}
+                                            <div class="text-center">
+                                                <i class="fas fa-arrow-down text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- En-têtes de cache (si disponibles) -->
+        {% if page_result.cache_headers %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-server me-2"></i>En-têtes de cache
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            {% for header, value in page_result.cache_headers.items() %}
+                                <tr>
+                                    <td class="fw-bold">{{ header }}</td>
+                                    <td>{{ value }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Actions et informations supplémentaires -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-tools me-2"></i>Outils et recommandations
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Outils externes :</h6>
+                        <div class="btn-group-vertical d-grid gap-2">
+                            <a href="https://pagespeed.web.dev/report?url={{ page_result.url|urlencode }}" 
+                               target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="fab fa-google"></i> PageSpeed Insights
+                            </a>
+                            <a href="https://search.google.com/test/mobile-friendly?url={{ page_result.url|urlencode }}" 
+                               target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-mobile-alt"></i> Test Mobile-Friendly
+                            </a>
+                            <a href="https://validator.w3.org/check?uri={{ page_result.url|urlencode }}" 
+                               target="_blank" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-code"></i> Validateur HTML
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Recommandations :</h6>
+                        <ul class="list-unstyled">
+                            {% if page_result.title_len == 0 %}
+                                <li><i class="fas fa-exclamation-triangle text-warning"></i> Ajouter un titre à la page</li>
+                            {% elif page_result.title_len < 30 %}
+                                <li><i class="fas fa-info-circle text-info"></i> Allonger le titre (minimum 30 caractères)</li>
+                            {% elif page_result.title_len > 60 %}
+                                <li><i class="fas fa-info-circle text-info"></i> Raccourcir le titre (maximum 60 caractères)</li>
+                            {% endif %}
+
+                            {% if page_result.meta_desc_len == 0 %}
+                                <li><i class="fas fa-exclamation-triangle text-warning"></i> Ajouter une meta description</li>
+                            {% elif page_result.meta_desc_len < 120 %}
+                                <li><i class="fas fa-info-circle text-info"></i> Allonger la meta description (minimum 120 caractères)</li>
+                            {% elif page_result.meta_desc_len > 160 %}
+                                <li><i class="fas fa-info-circle text-info"></i> Raccourcir la meta description (maximum 160 caractères)</li>
+                            {% endif %}
+
+                            {% if page_result.h1_count == 0 %}
+                                <li><i class="fas fa-exclamation-triangle text-warning"></i> Ajouter un titre H1</li>
+                            {% elif page_result.h1_count > 1 %}
+                                <li><i class="fas fa-info-circle text-info"></i> Utiliser un seul H1 par page</li>
+                            {% endif %}
+
+                            {% if page_result.word_count < 150 %}
+                                <li><i class="fas fa-exclamation-triangle text-warning"></i> Enrichir le contenu (minimum 150 mots)</li>
+                            {% endif %}
+
+                            {% if page_result.img_no_alt > 0 %}
+                                <li><i class="fas fa-exclamation-triangle text-warning"></i> Ajouter des attributs alt aux images</li>
+                            {% endif %}
+
+                            {% if not page_result.is_compressed %}
+                                <li><i class="fas fa-info-circle text-info"></i> Activer la compression GZIP</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informations sur l'analyse -->
+        <div class="mt-4 text-muted text-center">
+            <small>
+                <i class="fas fa-calendar"></i> Analysé le {{ page_result.crawled_at[:19] if page_result.crawled_at else analysis_data.end_time.strftime('%d/%m/%Y à %H:%M') }}
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Script pour cette page spécifique si nécessaire
+document.addEventListener('DOMContentLoaded', function() {
+    // Ajouter des interactions spécifiques si nécessaire
+});
+</script>
+{% endblock %}

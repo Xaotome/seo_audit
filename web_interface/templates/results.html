@@ -1,0 +1,531 @@
+{% extends "base.html" %}
+
+{% block title %}Résultats de l'analyse - SEO Audit Tool{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- En-tête des résultats -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="text-primary">
+                    <i class="fas fa-chart-bar me-2"></i>Résultats de l'analyse SEO
+                </h2>
+                <p class="text-muted mb-0">
+                    <i class="fas fa-globe me-1"></i>{{ analysis_data.domain }} - 
+                    <i class="fas fa-calendar me-1"></i>{{ analysis_data.end_time.strftime('%d/%m/%Y à %H:%M') }}
+                </p>
+            </div>
+            <div>
+                <a href="{{ url_for('download_results', analysis_id=analysis_id, file_type='json') }}" 
+                   class="btn btn-outline-primary me-2">
+                    <i class="fas fa-download me-1"></i>JSON
+                </a>
+                <a href="{{ url_for('download_results', analysis_id=analysis_id, file_type='html') }}" 
+                   class="btn btn-outline-success">
+                    <i class="fas fa-download me-1"></i>HTML
+                </a>
+            </div>
+        </div>
+
+        <!-- Résumé exécutif -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas fa-file-alt fa-2x"></i>
+                            </div>
+                            <div>
+                                <div class="fs-4 fw-bold">{{ analysis_data.summary.total_pages }}</div>
+                                <div>Pages analysées</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                            </div>
+                            <div>
+                                <div class="fs-4 fw-bold">{{ analysis_data.summary.pages_with_issues }}</div>
+                                <div>Pages avec problèmes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas fa-bug fa-2x"></i>
+                            </div>
+                            <div>
+                                <div class="fs-4 fw-bold">{{ analysis_data.summary.total_issues }}</div>
+                                <div>Total des problèmes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                            <div>
+                                <div class="fs-4 fw-bold">{{ "%.0f"|format(analysis_data.summary.avg_response_time) }}ms</div>
+                                <div>Temps de réponse moyen</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top problèmes -->
+        {% if analysis_data.summary.top_issues %}
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-circle me-2"></i>Top 5 des problèmes détectés
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for issue, count in analysis_data.summary.top_issues %}
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="badge bg-danger rounded-pill me-3">{{ count }}</div>
+                            <div>
+                                <strong>{{ issue }}</strong><br>
+                                <small class="text-muted">
+                                    {{ "%.1f"|format((count / analysis_data.summary.total_pages) * 100) }}% des pages
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Graphiques -->
+        <div class="row mb-4">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>Répartition des problèmes
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="issuesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-bar me-2"></i>Longueur des titres
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="titleLengthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tableau détaillé des résultats -->
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table me-2"></i>Détail par page
+                    </h5>
+                    <div>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="toggleFilters()">
+                            <i class="fas fa-filter me-1"></i>Filtres
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="exportTableToCSV()">
+                            <i class="fas fa-download me-1"></i>CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filtres -->
+            <div id="filtersPanel" class="card-body border-bottom d-none">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Statut HTTP</label>
+                        <select class="form-select form-select-sm" id="statusFilter">
+                            <option value="">Tous</option>
+                            <option value="200">200 - OK</option>
+                            <option value="404">404 - Not Found</option>
+                            <option value="500">500 - Server Error</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Problèmes</label>
+                        <select class="form-select form-select-sm" id="issuesFilter">
+                            <option value="">Tous</option>
+                            <option value="with-issues">Avec problèmes</option>
+                            <option value="no-issues">Sans problèmes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Recherche</label>
+                        <input type="text" class="form-control form-control-sm" id="searchFilter" 
+                               placeholder="URL, titre...">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="resultsTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>URL</th>
+                                <th>Statut</th>
+                                <th>Temps</th>
+                                <th>Titre</th>
+                                <th>Meta Desc</th>
+                                <th>H1</th>
+                                <th>Mots</th>
+                                <th>Problèmes</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results_data.results %}
+                            <tr data-status="{{ result.status }}" 
+                                data-issues="{{ result.issues|length }}"
+                                data-url="{{ result.url }}"
+                                data-title="{{ result.title or '' }}">
+                                <td>
+                                    <div>
+                                        <a href="{{ url_for('view_page_details', analysis_id=analysis_id, page_index=loop.index0) }}" 
+                                           class="text-decoration-none fw-bold">
+                                            {{ result.url|truncate(50) }}
+                                        </a>
+                                    </div>
+                                    <small>
+                                        <a href="{{ result.url }}" target="_blank" class="text-muted text-decoration-none">
+                                            <i class="fas fa-external-link-alt me-1"></i>Ouvrir
+                                        </a>
+                                    </small>
+                                </td>
+                                <td>
+                                    {% if result.status == 200 %}
+                                        <span class="badge bg-success">{{ result.status }}</span>
+                                    {% elif result.status >= 400 %}
+                                        <span class="badge bg-danger">{{ result.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">{{ result.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if result.response_ms %}
+                                        {% if result.response_ms > 3000 %}
+                                            <span class="text-danger">{{ result.response_ms }}ms</span>
+                                        {% elif result.response_ms > 1000 %}
+                                            <span class="text-warning">{{ result.response_ms }}ms</span>
+                                        {% else %}
+                                            <span class="text-success">{{ result.response_ms }}ms</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div>
+                                        {% if result.title_len == 0 %}
+                                            <span class="text-danger">Manquant</span>
+                                        {% elif result.title_len < 30 or result.title_len > 60 %}
+                                            <span class="text-warning">{{ result.title_len }} chars</span>
+                                        {% else %}
+                                            <span class="text-success">{{ result.title_len }} chars</span>
+                                        {% endif %}
+                                    </div>
+                                    {% if result.title %}
+                                        <small class="text-muted">{{ result.title|truncate(30) }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if result.meta_desc_len == 0 %}
+                                        <span class="text-danger">Manquant</span>
+                                    {% elif result.meta_desc_len < 120 or result.meta_desc_len > 160 %}
+                                        <span class="text-warning">{{ result.meta_desc_len }} chars</span>
+                                    {% else %}
+                                        <span class="text-success">{{ result.meta_desc_len }} chars</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if result.h1_count == 0 %}
+                                        <span class="text-danger">0</span>
+                                    {% elif result.h1_count == 1 %}
+                                        <span class="text-success">1</span>
+                                    {% else %}
+                                        <span class="text-warning">{{ result.h1_count }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if result.word_count < 300 %}
+                                        <span class="text-warning">{{ result.word_count }}</span>
+                                    {% else %}
+                                        <span class="text-success">{{ result.word_count }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if result.issues %}
+                                        <span class="badge bg-danger">{{ result.issues|length }}</span>
+                                        <button class="btn btn-sm btn-outline-primary ms-1" 
+                                                onclick="showIssues('{{ loop.index0 }}')">
+                                            Détails
+                                        </button>
+                                    {% else %}
+                                        <span class="badge bg-success">0</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('view_page_details', analysis_id=analysis_id, page_index=loop.index0) }}" 
+                                       class="btn btn-sm btn-outline-info">
+                                        <i class="fas fa-eye me-1"></i>Voir
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour les détails des problèmes -->
+<div class="modal fade" id="issuesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Problèmes détectés</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="issuesContent">
+                <!-- Contenu dynamique -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal simplifié gardé pour la fonction showIssues -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+const resultsData = {{ results_data|tojson }};
+
+// Initialiser les graphiques
+document.addEventListener('DOMContentLoaded', function() {
+    initCharts();
+    initFilters();
+});
+
+// Initialiser les graphiques
+function initCharts() {
+    // Graphique des problèmes
+    const issuesCtx = document.getElementById('issuesChart').getContext('2d');
+    const topIssues = {{ analysis_data.summary.top_issues|tojson }};
+    
+    new Chart(issuesCtx, {
+        type: 'doughnut',
+        data: {
+            labels: topIssues.map(item => item[0]),
+            datasets: [{
+                data: topIssues.map(item => item[1]),
+                backgroundColor: [
+                    '#dc3545', '#fd7e14', '#ffc107', '#20c997', '#0dcaf0'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+    
+    // Graphique des longueurs de titres
+    const titleLengthCtx = document.getElementById('titleLengthChart').getContext('2d');
+    const titleLengths = resultsData.results.map(r => r.title_len || 0);
+    
+    // Grouper par tranches
+    const ranges = {
+        'Manquant (0)': 0,
+        'Trop court (<30)': 0,
+        'Optimal (30-60)': 0,
+        'Trop long (>60)': 0
+    };
+    
+    titleLengths.forEach(len => {
+        if (len === 0) ranges['Manquant (0)']++;
+        else if (len < 30) ranges['Trop court (<30)']++;
+        else if (len <= 60) ranges['Optimal (30-60)']++;
+        else ranges['Trop long (>60)']++;
+    });
+    
+    new Chart(titleLengthCtx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(ranges),
+            datasets: [{
+                data: Object.values(ranges),
+                backgroundColor: ['#dc3545', '#ffc107', '#198754', '#fd7e14']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// Initialiser les filtres
+function initFilters() {
+    const statusFilter = document.getElementById('statusFilter');
+    const issuesFilter = document.getElementById('issuesFilter');
+    const searchFilter = document.getElementById('searchFilter');
+    
+    [statusFilter, issuesFilter, searchFilter].forEach(filter => {
+        filter.addEventListener('change', applyFilters);
+        filter.addEventListener('input', applyFilters);
+    });
+}
+
+// Appliquer les filtres
+function applyFilters() {
+    const statusFilter = document.getElementById('statusFilter').value;
+    const issuesFilter = document.getElementById('issuesFilter').value;
+    const searchFilter = document.getElementById('searchFilter').value.toLowerCase();
+    
+    const rows = document.querySelectorAll('#resultsTable tbody tr');
+    
+    rows.forEach(row => {
+        let show = true;
+        
+        // Filtre par statut
+        if (statusFilter && row.dataset.status !== statusFilter) {
+            show = false;
+        }
+        
+        // Filtre par problèmes
+        if (issuesFilter) {
+            const hasIssues = parseInt(row.dataset.issues) > 0;
+            if (issuesFilter === 'with-issues' && !hasIssues) show = false;
+            if (issuesFilter === 'no-issues' && hasIssues) show = false;
+        }
+        
+        // Filtre par recherche
+        if (searchFilter) {
+            const url = row.dataset.url.toLowerCase();
+            const title = row.dataset.title.toLowerCase();
+            if (!url.includes(searchFilter) && !title.includes(searchFilter)) {
+                show = false;
+            }
+        }
+        
+        row.style.display = show ? '' : 'none';
+    });
+}
+
+// Basculer les filtres
+function toggleFilters() {
+    const panel = document.getElementById('filtersPanel');
+    panel.classList.toggle('d-none');
+}
+
+// Afficher les problèmes d'une page
+function showIssues(index) {
+    const result = resultsData.results[index];
+    const modal = new bootstrap.Modal(document.getElementById('issuesModal'));
+    
+    let content = `
+        <h6><i class="fas fa-globe me-2"></i>${result.url}</h6>
+        <hr>
+        <ul class="list-group list-group-flush">
+    `;
+    
+    result.issues.forEach(issue => {
+        content += `<li class="list-group-item"><i class="fas fa-exclamation-triangle text-warning me-2"></i>${issue}</li>`;
+    });
+    
+    content += '</ul>';
+    
+    document.getElementById('issuesContent').innerHTML = content;
+    modal.show();
+}
+
+// La fonction showPageDetails n'est plus nécessaire car nous utilisons maintenant des pages dédiées
+
+// Exporter le tableau en CSV
+function exportTableToCSV() {
+    const table = document.getElementById('resultsTable');
+    const rows = Array.from(table.querySelectorAll('tbody tr')).filter(row => row.style.display !== 'none');
+    
+    let csv = 'URL,Statut,Temps,Titre_Longueur,MetaDesc_Longueur,H1,Mots,Problemes\n';
+    
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const url = cells[0].textContent.trim();
+        const status = cells[1].textContent.trim();
+        const time = cells[2].textContent.trim();
+        const title = cells[3].textContent.trim();
+        const metaDesc = cells[4].textContent.trim();
+        const h1 = cells[5].textContent.trim();
+        const words = cells[6].textContent.trim();
+        const issues = cells[7].textContent.trim();
+        
+        csv += `"${url}","${status}","${time}","${title}","${metaDesc}","${h1}","${words}","${issues}"\n`;
+    });
+    
+    // Télécharger le fichier
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'seo_audit_results.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+</script>
+{% endblock %}

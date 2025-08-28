@@ -1,0 +1,17 @@
+{
+  "name": "seo-audit-tool",
+  "version": "1.0.0",
+  "description": "Outil d'audit SEO avec proxy local intégré",
+  "main": "proxy-server.js",
+  "scripts": {
+    "start": "node proxy-server.js",
+    "dev": "node proxy-server.js",
+    "proxy": "node proxy-server.js"
+  },
+  "keywords": ["seo", "audit", "web", "scraping", "proxy", "cors"],
+  "author": "SEO Audit Tool",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
